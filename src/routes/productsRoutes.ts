@@ -1,13 +1,25 @@
 import { Hono } from "hono";
-import dataDummy from "../data";
+import ProductServices from "../services/product";
 
-const usersRoutes = new Hono();
+const services = new ProductServices();
+const productRoutes = new Hono();
 
-usersRoutes.get("/", (c) => {
+productRoutes.get('/products', (c) => {
+    const data = services.getAllProduct();
     return c.json({
         message: "succes",
-        data: dataDummy
+        data: data
     })
 });
 
-export default usersRoutes;
+productRoutes.get('/products/:id', (c) => {
+    const id = c.req.param('id');
+    const data = services.getProductById(id);
+
+    return c.json({
+        message: "succes",
+        data: data
+    });
+});
+
+export default productRoutes;
