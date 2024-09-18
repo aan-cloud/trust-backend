@@ -6,6 +6,6 @@ COPY . .
 
 RUN bun install --frozen-lockfile
 
-RUN bun run generate
+# RUN bun run generate
 
 CMD ["bun", "start"]
