@@ -1,7 +1,7 @@
 import { Hono } from "hono"
 
 export function registerSwaggerEndpoint(app: Hono) {
-    app.get('/api-doc', (c) => {
+    app.get('/api-spec', (c) => {
   return c.json({
     openapi: '3.0.0',
     info: {
