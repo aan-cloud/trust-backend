@@ -4,8 +4,8 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-RUN bun install --frozen-lockfile
+RUN bun install 
 
-# RUN bun run generate
+RUn bun run generate
 
 CMD ["bun", "start"]

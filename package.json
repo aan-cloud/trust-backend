@@ -2,7 +2,8 @@
   "name": "trust-backend",
   "scripts": {
     "dev": "bun run --hot src/index.tsx",
-    "start": "bun run src/index.tsx"
+    "start": "bun run src/index.tsx",
+    "generate": "prisma generate"
   },
   "dependencies": {
     "@hono/swagger-ui": "^0.4.1",
