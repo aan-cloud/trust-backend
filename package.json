@@ -1,7 +1,7 @@
 {
   "name": "trust-backend",
   "scripts": {
-    "dev": "bun run --hot src/index.ts",
+    "dev": "bun run --hot src/index.tsx",
     "start": "bun run src/index.ts"
   },
   "dependencies": {
