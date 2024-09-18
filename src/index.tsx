@@ -15,7 +15,7 @@ app.get("/", async (c) => {
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Welcome to Nusaventure REST API</title>
+        <title>Welcome to Trust API</title>
         <meta
           name="description"
           content="Trust help you find quality automotive goods, directly from the manufacturer."
