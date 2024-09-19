@@ -6,6 +6,6 @@ COPY . .
 
 RUN bun install 
 
-RUn bun run generate
+RUN bun run generate
 
 CMD ["bun", "start"]
