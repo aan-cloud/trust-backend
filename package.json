@@ -2,8 +2,12 @@
   "name": "trust-backend",
   "scripts": {
     "dev": "bun run --hot src/index.tsx",
-    "start": "bunx migrate dev --name init && bun run src/index.tsx",
-    "generate": "prisma generate"
+    "start": "bun run src/index.tsx",
+    "generate": "prisma generate",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:studio": "prisma studio",
+    "db:seed": "prisma db seed"
   },
   "dependencies": {
     "@hono/swagger-ui": "^0.4.1",
