@@ -4,22 +4,55 @@ import ProductServices from "../services/product";
 const services = new ProductServices();
 const productRoutes = new Hono();
 
-productRoutes.get('/products', (c) => {
-    const data = services.getAllProduct();
-    return c.json({
-        message: "succes",
-        data: data
-    })
+productRoutes.get("/", async (c) => {
+  const data = await services.getAllProduct();
+
+  return c.json(
+    {
+      message: "succes",
+      data: data,
+    },
+    200,
+  );
 });
 
-productRoutes.get('/products/:id', (c) => {
-    const id = c.req.param('id');
-    const data = services.getProductById(id);
+productRoutes.get("/:slug", async (c) => {
+  const slug = c.req.param("slug");
+  const data = await services.getProductName(slug);
 
-    return c.json({
-        message: "succes",
-        data: data
-    });
+  return c.json(
+    {
+      message: `succes get ${slug}`,
+      data: data,
+    },
+    200,
+  );
+});
+
+productRoutes.get("/:slug", async (c) => {
+  const slug = c.req.param("slug");
+  const data = await services.deleteProductBySlug(slug);
+
+  return c.json(
+    {
+      message: `succes deleted ${slug}`,
+      data: data,
+    },
+    200,
+  );
+});
+
+productRoutes.post("/", async (c) => {
+  const reqdata = await c.req.json();
+  const postedData = await services.postProduct(reqdata);
+
+  return c.json(
+    {
+      message: "add item succes",
+      data: postedData,
+    },
+    200,
+  );
 });
 
 export default productRoutes;
