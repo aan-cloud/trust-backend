@@ -1,112 +1,180 @@
-import { Hono } from "hono"
+import { Hono } from "hono";
+import { number, string } from "zod";
 
 export function registerSwaggerEndpoint(app: Hono) {
-    app.get('/api-spec', (c) => {
-  return c.json({
-    openapi: '3.0.0',
-    info: {
-      title: 'Trust',
-      version: '1.0.0',
-      description: 'API Trust',
-    },
-    tags: [
+  app.get("/api-spec", (c) => {
+    return c.json({
+      openapi: "3.0.0",
+      info: {
+        title: "Trust",
+        version: "1.0.0",
+        description: "API Trust",
+      },
+      tags: [
         {
-            name: 'Products',
-            description: 'Products Operation'
-        }
-    ],
-    paths: {
-      '/products': {
-        get: {
-          summary: 'Mendapatkan daftar product',
-          responses: {
-            '200': {
-              description: 'Daftar product berhasil diambil',
-              content: {
-                'application/json': {
-                  schema: {
-                    type: 'object',
-                    properties: {
+          name: "Products",
+          description: "Products Operation",
+        },
+      ],
+      paths: {
+        "/products": {
+          get: {
+            tags: ["Products"],
+            summary: "Mendapatkan daftar produk",
+            responses: {
+              "200": {
+                description: "success",
+                content: {
+                  "application/json": {
+                    schema: {
+                      type: "object",
+                      properties: {
                         message: {
-                            type: 'string'
+                          type: "string",
                         },
                         data: {
-                            type: 'array',
-                            items: {
-                                $ref: '#/components/schemas/Product'
-                            } 
+                          type: "array",
+                          items: {
+                            $ref: "#/components/schemas/Product",
+                          },
                         },
+                      },
                     },
                   },
                 },
               },
             },
           },
-        },
-    },
-      '/products/{id}': {
-        get: {
-          summary: 'Mendapatkan product berdasarkan ID',
-          parameters: [
-            {
-              name: 'id',
-              in: 'path',
-              required: true,
-              schema: {
-                type: 'string',
-              },
-            },
-          ],
-          responses: {
-            '200': {
-              description: 'Pengguna berdasar kan ID berhasil diambil',
+          post: {
+            tags: ["Products"],
+            summary: "Menambahkan produk baru",
+            requestBody: {
               content: {
-                'application/json': {
+                "application/json": {
                   schema: {
-                    type: 'object',
-                    properties: {
+                    $ref: "#/components/schemas/Product",
+                  },
+                },
+              },
+              required: true,
+            },
+            responses: {
+              "201": {
+                description: "Produk berhasil ditambahkan",
+                content: {
+                  "application/json": {
+                    schema: {
+                      type: "object",
+                      properties: {
                         message: {
-                            type: 'string'
+                          type: "string",
                         },
                         data: {
-                            $ref: '#/components/schemas/Product',
-                        }
-                    }
+                          $ref: "#/components/schemas/Product",
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              "400": {
+                description: "Permintaan tidak valid",
+              },
+            },
+          },
+        },
+        "/products/{slug}": {
+          get: {
+            tags: ["Products"],
+            summary: "Mendapatkan produk berdasarkan slug",
+            parameters: [
+              {
+                name: "slug",
+                in: "path",
+                required: true,
+                schema: {
+                  type: "string",
+                },
+              },
+            ],
+            responses: {
+              "200": {
+                description: "Produk berdasarkan slug berhasil diambil",
+                content: {
+                  "application/json": {
+                    schema: {
+                      type: "object",
+                      properties: {
+                        message: {
+                          type: "string",
+                        },
+                        data: {
+                          $ref: "#/components/schemas/Product",
+                        },
+                      },
+                    },
                   },
                 },
               },
             },
           },
-        },
-      },
-    },
-    components: {
-      schemas: {
-        Product: {
-          type: 'object',
-          properties: {
-            id: {
-              type: 'string',
+          delete: {
+            tags: ["Products"],
+            summary: "Menghapus produk berdasarkan slug",
+            parameters: [
+              {
+                name: "slug",
+                in: "path",
+                required: true,
+                schema: {
+                  type: "string",
+                },
+              },
+            ],
+            responses: {
+              "200": {
+                description: "Produk berhasil dihapus",
+              },
+              "404": {
+                description: "Produk tidak ditemukan",
+              },
             },
-            imageUrl: {
-              type: 'string',
-            },
-            title: {
-                type: 'string'
-            },
-            category: {
-                type: 'string'
-            },
-            stock: {
-                type: 'string'
-            },
-            price: {
-                type: 'number'
-            }
           },
         },
       },
-    },
-  })
-})
+      components: {
+        schemas: {
+          Product: {
+            type: "object",
+            properties: {
+              id: {
+                type: "string",
+              },
+              name: {
+                type: "string",
+              },
+              slug: {
+                type: "string",
+              },
+              image_url: {
+                type: "string",
+              },
+              description: {
+                type: "string",
+              },
+              price: {
+                type: "number",
+              },
+              category: {
+                type: "string",
+              },
+              stock: {
+                type: "number",
+              },
+            },
+          },
+        },
+      },
+    });
+  });
 }
