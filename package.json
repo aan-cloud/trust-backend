@@ -2,7 +2,7 @@
   "name": "trust-backend",
   "scripts": {
     "dev": "bun run --hot src/index.tsx",
-    "start": "bunx prisma generate && bunx prisma migrate dev && bun run src/index.tsx",
+    "start": "bunx prisma generate && bunx prisma migrate deploy && bun run src/index.tsx",
     "generate": "prisma generate",
     "db:migrate:dev": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
