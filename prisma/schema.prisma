@@ -15,13 +15,13 @@ datasource db {
 
 model products {
   id String @id @default(uuid()) @db.Uuid
-  name String
-  slug String
+  name String @unique
+  slug String @unique
   image_url String
   description String
   price Int
   category String
   stock Int
-  created_at DateTime
-  updated_at DateTime
+  created_at DateTime?
+  updated_at DateTime?
 }
