@@ -1,12 +1,13 @@
-export default function WelcomePage () {
-    return (
-         <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-4">
+export default function WelcomePage() {
+  return (
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-4">
       <div className="bg-white shadow-md rounded-lg p-8 max-w-4xl w-full">
         <h1 className="text-4xl font-bold text-gray-900 mb-4 text-center">
           Welcome to Trust API
         </h1>
         <p className="text-lg text-gray-700 mb-6">
-          Nusaventure helps helps you find quality automotive goods, directly from the manufacturer
+          Nusaventure helps helps you find quality automotive goods, directly
+          from the manufacturer
         </p>
         <p className="text-lg text-gray-700 mb-6">
           The OpenAPI Specification for the Trust API offers a detailed
@@ -44,8 +45,5 @@ export default function WelcomePage () {
         </ul>
       </div>
     </div>
-    )
+  );
 }
-
-
-

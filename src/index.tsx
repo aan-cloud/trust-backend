@@ -1,17 +1,17 @@
-import { serve } from 'bun';
+import { serve } from "bun";
 import { swaggerUI } from "@hono/swagger-ui";
 import { registerSwaggerEndpoint } from "./config/swagger";
 import "./routes/productsRoutes";
 import { Hono } from "hono";
 import "./config/swagger";
-import WelcomePage from './Welcome';
+import WelcomePage from "./Welcome";
 import productRoutes from "./routes/productsRoutes";
 
 const app = new Hono();
 
 app.get("/", async (c) => {
   return await c.html(
-     <html lang="en">
+    <html lang="en">
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -25,22 +25,19 @@ app.get("/", async (c) => {
       <body>
         <WelcomePage />
       </body>
-    </html>
+    </html>,
   );
 });
 
-
 registerSwaggerEndpoint(app);
-app.get("/ui", swaggerUI({url:'/api-spec'}));
+app.get("/ui", swaggerUI({ url: "/api-spec" }));
 
-
-app.route('/products', productRoutes);
-
+app.route("/products", productRoutes);
 
 const port: number = 3000;
 console.log(`Server is running on port ${port}`);
 
 serve({
   fetch: app.fetch,
-  port
+  port,
 });
