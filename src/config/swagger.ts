@@ -168,6 +168,45 @@ export function registerSwaggerEndpoint(app: Hono) {
               }
             }
           }
+        },
+        "/products/{category}": {
+          get: {
+            tags: ["Products"],
+            summary: "Mendapatkan produk berdasarkan category",
+            parameters: [
+              {
+                name: "category",
+                in: "path",
+                required: true,
+                schema: {
+                  type: "string",
+                },
+              },
+            ],
+            responses: {
+              "200": {
+                description: "Produk berdasarkan category berhasil diambil",
+                content: {
+                  "application/json": {
+                    schema: {
+                      type: "object",
+                      properties: {
+                        message: {
+                          type: "string",
+                        },
+                        data: {
+                          type: "array",
+                          items: {
+                            $ref: "#/components/schemas/Product",
+                          }
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
         }
       },
       components: {
