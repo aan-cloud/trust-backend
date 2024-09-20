@@ -30,7 +30,7 @@ productRoutes.get("/:slug", async (c) => {
   );
 });
 
-productRoutes.get("/:slug", async (c) => {
+productRoutes.delete("/:slug", async (c) => {
   const slug = c.req.param("slug");
   const data = await services.deleteProductBySlug(slug);
 
