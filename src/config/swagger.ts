@@ -44,6 +44,18 @@ export function registerSwaggerEndpoint(app: Hono) {
               },
             },
           },
+          delete: {
+            tags: ["Products"],
+            summary: "Menghapus semua product",
+            responses: {
+              "200": {
+                description: "Produk berhasil dihapus",
+              },
+              "404": {
+                description: "Produk tidak ditemukan",
+              },
+            },
+          },
           post: {
             tags: ["Products"],
             summary: "Menambahkan produk baru",
