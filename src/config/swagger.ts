@@ -1,5 +1,4 @@
 import { Hono } from "hono";
-import { number, string } from "zod";
 
 export function registerSwaggerEndpoint(app: Hono) {
   app.get("/api-spec", (c) => {
