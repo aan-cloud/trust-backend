@@ -6,10 +6,6 @@ export default function WelcomePage() {
           Welcome to Trust API
         </h1>
         <p className="text-lg text-gray-700 mb-6">
-          Nusaventure helps helps you find quality automotive goods, directly
-          from the manufacturer
-        </p>
-        <p className="text-lg text-gray-700 mb-6">
           The OpenAPI Specification for the Trust API offers a detailed
           description of the API's services. It can be accessed at the path{" "}
           <code className="bg-gray-200 rounded px-2 py-1">/api-spec</code>.
