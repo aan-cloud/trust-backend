@@ -5,7 +5,7 @@ export const data_products = [
         "image_url": "https://ucarecdn.com/70a2a667-01b7-4d66-85e7-b0be2f0265ae/",
         "description": "Battery chargers for all types of cars are light in weight so they can be taken anywhere",
         "price": 2000,
-        "category": "Battery",
+        "category": "battery",
         "stock": 10
     },
     {
@@ -14,7 +14,7 @@ export const data_products = [
         "image_url": "https://ucarecdn.com/02014049-1920-4b8e-b064-a7be3c1490b2/",
         "description": "Car Front Lamp",
         "price": 1000,
-        "category": "Lamp",
+        "category": "lamp",
         "stock": 5
     },
     {
@@ -32,7 +32,7 @@ export const data_products = [
         "image_url": "https://ucarecdn.com/4d874741-3524-4523-bfeb-97d49f54907b/",
         "description": "Toyota Tire from ring 24",
         "price": 2500,
-        "category": "Tire",
+        "category": "tire",
         "stock": 5
     },
     {
