@@ -17,6 +17,18 @@ export default class ProductServices {
     });
   };
 
+  async getProductCategory (category: string) {
+    return await prisma.products.findMany({
+      where: {
+        category: category
+      }
+    });
+  };
+
+  async deleteAllProduct() {
+    return await prisma.products.deleteMany({});
+  };
+
   async deleteProductBySlug(slug: string) {
     return await prisma.products.delete({
       where: {
