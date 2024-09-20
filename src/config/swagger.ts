@@ -140,6 +140,35 @@ export function registerSwaggerEndpoint(app: Hono) {
             },
           },
         },
+        "/products/seed": {
+          post: {
+            tags: ["Products"],
+            summary: "Post Seed Data",
+            responses: {
+              "201": {
+                description: "Succes Add Seed Products",
+                content: {
+                  "application/json": {
+                    schema: {
+                      type: "object",
+                      properties: {
+                        message: {
+                          type: "string"
+                        },
+                        data: {
+                          type: "array",
+                          items: {
+                            $ref: "#/components/schemas/Product",
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       components: {
         schemas: {
