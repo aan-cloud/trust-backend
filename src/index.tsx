@@ -1,5 +1,6 @@
 import { serve } from "bun";
 import { swaggerUI } from "@hono/swagger-ui";
+import { cors } from "hono/cors";
 import { registerSwaggerEndpoint } from "./config/swagger";
 import "./routes/productsRoutes";
 import { Hono } from "hono";
@@ -8,6 +9,8 @@ import WelcomePage from "./Welcome";
 import productRoutes from "./routes/productsRoutes";
 
 const app = new Hono();
+
+app.use(cors());
 
 app.get("/", async (c) => {
   return await c.html(
