@@ -17,6 +17,16 @@ productRoutes.get("/", async (c) => {
   );
 });
 
+productRoutes.get("/:category", async (c) => {
+  const category = c.req.param('category');
+  const data = await services.getProductCategory(category);
+
+  return c.json({
+    message: `Succes get product categories`,
+    data: data
+  });
+});
+
 productRoutes.get("/:slug", async (c) => {
   const slug = c.req.param("slug");
   const data = await services.getProductName(slug);
@@ -28,6 +38,15 @@ productRoutes.get("/:slug", async (c) => {
     },
     200,
   );
+});
+
+productRoutes.delete("/", async (c) => {
+  const deletedData = await services.deleteAllProduct();
+
+  return c.json({
+    message: `succes deleted ${deletedData.count} data`,
+    data: deletedData
+  });
 });
 
 productRoutes.delete("/:slug", async (c) => {
