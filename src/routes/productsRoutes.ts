@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import ProductServices from "../services/product";
+import { data_products } from "../seed/products";
 
 const services = new ProductServices();
 const productRoutes = new Hono();
@@ -40,6 +41,15 @@ productRoutes.get("/:slug", async (c) => {
     },
     200,
   );
+});
+
+productRoutes.post("/seed", async(c) => {
+  const postedData = await services.postSeedProduct(data_products);
+
+  return c.json({
+    message: "succes add seed item",
+    data: postedData
+  });
 });
 
 productRoutes.post("/", async (c) => {
