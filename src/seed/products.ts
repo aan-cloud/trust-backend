@@ -11,7 +11,7 @@ export const data_products = [
     {
         "name": "Front Lamp",
         "slug": "front-lamp",
-        "image_url": "https://ucarecdn.com/02014049-1920-4b8e-b064-a7be3c1490b2/",
+        "image_url": "https://ucarecdn.com/f5e45c85-7b49-42d2-a6d9-64b9508dcd10/",
         "description": "Car Front Lamp",
         "price": 1000,
         "category": "lamp",
@@ -38,7 +38,7 @@ export const data_products = [
     {
         "name": "Cable de coche",
         "slug": "cable-de-coche",
-        "image_url": "https://ucarecdn.com/be6ad6a9-12ce-4f5b-b9cc-97744f7de858/",
+        "image_url": "https://ucarecdn.com/642dedd8-e7dd-42ff-adfe-e1c066bc695f/",
         "description": "Cable de coche for toyota starlet",
         "price": 100,
         "category": "cable",
@@ -47,7 +47,7 @@ export const data_products = [
     {
         "name": "Brake Wire",
         "slug": "brake-wire",
-        "image_url": "https://ucarecdn.com/5b3a02d2-87de-49cc-8a55-0ef9e577d925/",
+        "image_url": "https://ucarecdn.com/f4dab657-2ab8-43da-b2bd-e7a2ecf25b42/",
         "description": "Brake wire for car checkout now heyyy!!",
         "price": 400,
         "category": "brake",
