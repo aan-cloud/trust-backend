@@ -52,5 +52,59 @@ export const data_products = [
         "price": 400,
         "category": "brake",
         "stock": 10
+    },
+    {
+        "name": "Herness Cable",
+        "slug": "herness-cable",
+        "image_url": "https://ucarecdn.com/520a57a8-9057-4d8f-9598-a0b037b17ba1/",
+        "description": "Herness cable for your car plsss checkout",
+        "price": 30,
+        "category": "cable",
+        "stock": 10
+    },
+    {
+        "name": "Charger Autometer",
+        "slug": "charger-autometer",
+        "image_url": "https://ucarecdn.com/346dec83-284d-46ae-b86b-10686b494a4c/",
+        "description": "charger autometer make your mood happy",
+        "price": 120,
+        "category": "battery",
+        "stock": 200
+    },
+    {
+        "name": "Blitz Cooler",
+        "slug": "blitz-cooler",
+        "image_url": "https://ucarecdn.com/4b317b82-daa3-4d67-8f0a-bda6047823c0/",
+        "description": "Blitz oil cooler you can get it",
+        "price": 120,
+        "category": "cooler",
+        "stock": 20
+    },
+    {
+        "name": "Mitsubitsi Tire",
+        "slug": "mitsubitsi-tire",
+        "image_url": "https://ucarecdn.com/4d83b6d4-6127-4a2d-8e7b-b1d491437f57/",
+        "description": "Tire for mitsubitsi",
+        "price": 300,
+        "category": "tire",
+        "stock": 10
+    },
+    {
+        "name": "Rush Lamp",
+        "slug": "rush-lamp",
+        "image_url": "https://ucarecdn.com/2e9ba92c-c1ed-498c-a551-8a8e4656a96c/",
+        "description": "Back Lamp for toyota Rush",
+        "price": 60,
+        "category": "lamp",
+        "stock": 40
+    },
+    {
+        "name": "Mustang AT",
+        "slug": "mustang-at",
+        "image_url": "https://ucarecdn.com/5b55b64a-369d-463c-8c52-0121c40ce5d5/",
+        "description": "Brake Tool for mustang auto transmission",
+        "price": 120,
+        "category": "brake",
+        "stock": 600
     }
 ]
