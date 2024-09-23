@@ -18,13 +18,13 @@ productRoutes.get("/", async (c) => {
 });
 
 productRoutes.get("/:category/:slug?", async (c) => {
-  const category = c.req.param('category');
-  const slug = c.req.param('slug');
-  const data = await services.getProductCategory(category,slug);
+  const category = c.req.param("category");
+  const slug = c.req.param("slug");
+  const data = await services.getProductCategory(category, slug);
 
   return c.json({
-    message: `Succes get product ${category} ${slug ? ' ' + slug : ''}`,
-    data: data
+    message: `Succes get product ${category} ${slug ? " " + slug : ""}`,
+    data: data,
   });
 });
 
@@ -33,7 +33,7 @@ productRoutes.delete("/", async (c) => {
 
   return c.json({
     message: `succes deleted ${deletedData.count} data`,
-    data: deletedData
+    data: deletedData,
   });
 });
 
@@ -50,12 +50,12 @@ productRoutes.delete("/:slug", async (c) => {
   );
 });
 
-productRoutes.post("/seed", async(c) => {
+productRoutes.post("/seed", async (c) => {
   const postedData = await services.postSeedProduct(data_products);
 
   return c.json({
     message: "succes add seed item",
-    data: postedData
+    data: postedData,
   });
 });
 

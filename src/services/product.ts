@@ -7,20 +7,20 @@ type product = z.infer<typeof productSchema>;
 export default class ProductServices {
   async getAllProduct() {
     return await prisma.products.findMany({});
-  };
+  }
 
-  async getProductCategory (category: string, slug?: string) {
+  async getProductCategory(category: string, slug?: string) {
     return await prisma.products.findMany({
       where: {
         category: category,
-        ...(slug ? { slug: slug } : {})
-      }
+        ...(slug ? { slug: slug } : {}),
+      },
     });
-  };
+  }
 
   async deleteAllProduct() {
     return await prisma.products.deleteMany({});
-  };
+  }
 
   async deleteProductBySlug(slug: string) {
     return await prisma.products.delete({
@@ -28,14 +28,14 @@ export default class ProductServices {
         slug: slug,
       },
     });
-  };
+  }
 
-  async postSeedProduct (data: product[]) {
+  async postSeedProduct(data: product[]) {
     return await prisma.products.createMany({
       data: data,
-      skipDuplicates: true
+      skipDuplicates: true,
     });
-  };
+  }
 
   async postProduct({
     name,
@@ -61,5 +61,5 @@ export default class ProductServices {
         updated_at,
       },
     });
-  };
-};
+  }
+}

@@ -107,21 +107,21 @@ export function registerSwaggerEndpoint(app: Hono) {
                       type: "object",
                       properties: {
                         message: {
-                          type: "string"
+                          type: "string",
                         },
                         data: {
                           type: "array",
                           items: {
                             $ref: "#/components/schemas/Product",
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
         "/products/{category}/{slug}": {
           get: {
@@ -139,15 +139,16 @@ export function registerSwaggerEndpoint(app: Hono) {
               {
                 name: "slug",
                 in: "path",
-                required: false,
+                required: false, // Ini bisa diubah sesuai dengan desain rute
                 schema: {
-                  type: "string"
-                }
-              }
+                  type: "string",
+                },
+              },
             ],
             responses: {
               "200": {
-                description: "Produk berdasarkan category dan slug berhasil diambil",
+                description:
+                  "Produk berdasarkan category dan slug berhasil diambil",
                 content: {
                   "application/json": {
                     schema: {
@@ -160,12 +161,15 @@ export function registerSwaggerEndpoint(app: Hono) {
                           type: "array",
                           items: {
                             $ref: "#/components/schemas/Product",
-                          }
+                          },
                         },
                       },
                     },
                   },
                 },
+              },
+              "404": {
+                description: "Produk tidak ditemukan", // Bisa ditambahkan jika slug atau category tidak valid
               },
             },
           },
@@ -191,7 +195,7 @@ export function registerSwaggerEndpoint(app: Hono) {
               },
             },
           },
-        }
+        },
       },
       components: {
         schemas: {
