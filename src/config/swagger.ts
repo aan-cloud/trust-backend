@@ -94,64 +94,6 @@ export function registerSwaggerEndpoint(app: Hono) {
             },
           },
         },
-        "/products/{slug}": {
-          get: {
-            tags: ["Products"],
-            summary: "Mendapatkan produk berdasarkan slug",
-            parameters: [
-              {
-                name: "slug",
-                in: "path",
-                required: true,
-                schema: {
-                  type: "string",
-                },
-              },
-            ],
-            responses: {
-              "200": {
-                description: "Produk berdasarkan slug berhasil diambil",
-                content: {
-                  "application/json": {
-                    schema: {
-                      type: "object",
-                      properties: {
-                        message: {
-                          type: "string",
-                        },
-                        data: {
-                          $ref: "#/components/schemas/Product",
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-          delete: {
-            tags: ["Products"],
-            summary: "Menghapus produk berdasarkan slug",
-            parameters: [
-              {
-                name: "slug",
-                in: "path",
-                required: true,
-                schema: {
-                  type: "string",
-                },
-              },
-            ],
-            responses: {
-              "200": {
-                description: "Produk berhasil dihapus",
-              },
-              "404": {
-                description: "Produk tidak ditemukan",
-              },
-            },
-          },
-        },
         "/products/seed": {
           post: {
             tags: ["Products"],
@@ -181,10 +123,10 @@ export function registerSwaggerEndpoint(app: Hono) {
             }
           }
         },
-        "/products/{category}": {
+        "/products/{category}/{slug}": {
           get: {
             tags: ["Products"],
-            summary: "Mendapatkan produk berdasarkan category",
+            summary: "Mendapatkan produk berdasarkan category dan slug",
             parameters: [
               {
                 name: "category",
@@ -194,10 +136,18 @@ export function registerSwaggerEndpoint(app: Hono) {
                   type: "string",
                 },
               },
+              {
+                name: "slug",
+                in: "path",
+                required: false,
+                schema: {
+                  type: "string"
+                }
+              }
             ],
             responses: {
               "200": {
-                description: "Produk berdasarkan category berhasil diambil",
+                description: "Produk berdasarkan category dan slug berhasil diambil",
                 content: {
                   "application/json": {
                     schema: {
@@ -216,6 +166,28 @@ export function registerSwaggerEndpoint(app: Hono) {
                     },
                   },
                 },
+              },
+            },
+          },
+          delete: {
+            tags: ["Products"],
+            summary: "Menghapus produk berdasarkan slug",
+            parameters: [
+              {
+                name: "slug",
+                in: "path",
+                required: true,
+                schema: {
+                  type: "string",
+                },
+              },
+            ],
+            responses: {
+              "200": {
+                description: "Produk berhasil dihapus",
+              },
+              "404": {
+                description: "Produk tidak ditemukan",
               },
             },
           },

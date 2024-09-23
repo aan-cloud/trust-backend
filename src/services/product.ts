@@ -9,18 +9,11 @@ export default class ProductServices {
     return await prisma.products.findMany({});
   };
 
-  async getProductName(slug: string) {
-    return await prisma.products.findFirst({
-      where: {
-        slug: slug,
-      },
-    });
-  };
-
-  async getProductCategory (category: string) {
+  async getProductCategory (category: string, slug: string) {
     return await prisma.products.findMany({
       where: {
-        category: category
+        category: category,
+        slug: slug
       }
     });
   };
