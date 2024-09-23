@@ -22,6 +22,9 @@ productRoutes.get("/:category/:slug?", async (c) => {
   const slug = c.req.param("slug");
   const data = await services.getProductCategory(category, slug);
 
+  console.log('Category:', category);
+  console.log('Slug:', slug);
+
   return c.json({
     message: `Succes get product ${category} ${slug ? " " + slug : ""}`,
     data: data,

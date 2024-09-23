@@ -139,7 +139,7 @@ export function registerSwaggerEndpoint(app: Hono) {
               {
                 name: "slug",
                 in: "path",
-                required: false, // Ini bisa diubah sesuai dengan desain rute
+                required: false,
                 schema: {
                   type: "string",
                 },
@@ -169,7 +169,7 @@ export function registerSwaggerEndpoint(app: Hono) {
                 },
               },
               "404": {
-                description: "Produk tidak ditemukan", // Bisa ditambahkan jika slug atau category tidak valid
+                description: "Produk tidak ditemukan",
               },
             },
           },
