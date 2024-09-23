@@ -13,7 +13,7 @@ export default class ProductServices {
     return await prisma.products.findMany({
       where: {
         category: category,
-        ...(slug && { slug: slug })
+        ...(slug ? { slug: slug } : {})
       }
     });
   };
