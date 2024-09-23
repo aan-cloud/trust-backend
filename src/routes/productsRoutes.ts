@@ -17,13 +17,13 @@ productRoutes.get("/", async (c) => {
   );
 });
 
-productRoutes.get("/:category/:slug", async (c) => {
+productRoutes.get("/:category/:slug?", async (c) => {
   const category = c.req.param('category');
   const slug = c.req.param('slug');
   const data = await services.getProductCategory(category,slug);
 
   return c.json({
-    message: `Succes get product ${category} ${slug}`,
+    message: `Succes get product ${category} ${slug ? ' ' + slug : ''}`,
     data: data
   });
 });

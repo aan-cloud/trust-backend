@@ -9,11 +9,11 @@ export default class ProductServices {
     return await prisma.products.findMany({});
   };
 
-  async getProductCategory (category: string, slug: string) {
+  async getProductCategory (category: string, slug?: string) {
     return await prisma.products.findMany({
       where: {
         category: category,
-        slug: slug
+        ...(slug && { slug: slug })
       }
     });
   };
