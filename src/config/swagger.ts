@@ -108,7 +108,7 @@ export function registerSwaggerEndpoint(app: Hono) {
                 }
               }
             ],
-            response: {
+            responses: {
               "200": {
                 description: "Succes get products by slug",
                 content: {
@@ -128,7 +128,7 @@ export function registerSwaggerEndpoint(app: Hono) {
                   },
                 },
               }
-            }
+            },
           }
         },
         "/products/seed": {
@@ -174,7 +174,7 @@ export function registerSwaggerEndpoint(app: Hono) {
                 }
               }
             ],
-            response: {
+            responses: {
               "200": {
                 description: "Succes get products by categories",
                 content: {
@@ -196,7 +196,7 @@ export function registerSwaggerEndpoint(app: Hono) {
                   },
                 },
               }
-            }
+            },
           }
         },
         "/products/{categories}/{slug}": {
