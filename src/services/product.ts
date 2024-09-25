@@ -1,28 +1,44 @@
 import prisma from "../lib/db";
 import { z } from "zod";
-import productSchema from "../schemas/product";
+import productSchema from "../schemas/product.schema";
 
 type product = z.infer<typeof productSchema>;
 
 export default class ProductServices {
-  async getAllProduct() {
+  async getAllProducts() {
     return await prisma.products.findMany({});
   }
 
-  async getProductCategory(category: string, slug?: string) {
-    return await prisma.products.findMany({
+  async getProductsSlug(slug: string) {
+    return await prisma.products.findFirst({
       where: {
-        category: category,
-        ...(slug ? { slug: slug } : {}),
-      },
-    });
+        slug: slug
+      }
+    })
   }
 
-  async deleteAllProduct() {
+  async getCategories(categories: string) {
+    return await prisma.products.findMany({
+      where: {
+        category: categories
+      },
+    });
+  };
+
+  async getCategoriesSlug(categories: string, slug: string) {
+    return await prisma.products.findFirst({
+      where: {
+        category: categories,
+        slug: slug
+      }
+    });
+  };
+
+  async deleteAllProducts() {
     return await prisma.products.deleteMany({});
   }
 
-  async deleteProductBySlug(slug: string) {
+  async deleteProductsBySlug(slug: string) {
     return await prisma.products.delete({
       where: {
         slug: slug,
@@ -30,14 +46,14 @@ export default class ProductServices {
     });
   }
 
-  async postSeedProduct(data: product[]) {
+  async postSeedProducts(data: product[]) {
     return await prisma.products.createMany({
       data: data,
       skipDuplicates: true,
     });
   }
 
-  async postProduct({
+  async postProducts({
     name,
     slug,
     image_url,
