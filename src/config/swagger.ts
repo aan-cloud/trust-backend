@@ -94,6 +94,43 @@ export function registerSwaggerEndpoint(app: Hono) {
             },
           },
         },
+        "/products/{slug}": {
+          get: {
+            tags: ["Products"],
+            summary: "Get products by slug",
+            parameters: [
+              {
+                name: "slug",
+                in: "path",
+                required: true,
+                schema: {
+                  type: "string"
+                }
+              }
+            ],
+            response: {
+              "200": {
+                description: "Succes get products by slug",
+                content: {
+                  "application/json": {
+                    schema: {
+                      type: "object",
+                      properties: {
+                        message: {
+                          type: "string",
+                        },
+                        data: {
+                          type: "object",
+                          $ref: "#/components/schemas/Product",
+                        },
+                      },
+                    },
+                  },
+                },
+              }
+            }
+          }
+        },
         "/products/seed": {
           post: {
             tags: ["Products"],
@@ -123,13 +160,52 @@ export function registerSwaggerEndpoint(app: Hono) {
             },
           },
         },
-        "/products/{category}/{slug}": {
+        "products/{categories}": {
+          get: {
+            tags: ["Products"],
+            summary: "Get products by categories",
+            parameters: [
+              {
+                name: "categories",
+                in: "path",
+                required: true,
+                schema: {
+                  type: "string"
+                }
+              }
+            ],
+            response: {
+              "200": {
+                description: "Succes get products by categories",
+                content: {
+                  "application/json": {
+                    schema: {
+                      type: "object",
+                      properties: {
+                        message: {
+                          type: "string",
+                        },
+                        data: {
+                          type: "array",
+                          items: {
+                            $ref: "#/components/schemas/Product",                          
+                          }
+                        },
+                      },
+                    },
+                  },
+                },
+              }
+            }
+          }
+        },
+        "/products/{categories}/{slug}": {
           get: {
             tags: ["Products"],
             summary: "Mendapatkan produk berdasarkan category dan slug",
             parameters: [
               {
-                name: "category",
+                name: "categories",
                 in: "path",
                 required: true,
                 schema: {
@@ -139,7 +215,7 @@ export function registerSwaggerEndpoint(app: Hono) {
               {
                 name: "slug",
                 in: "path",
-                required: false,
+                required: true,
                 schema: {
                   type: "string",
                 },
