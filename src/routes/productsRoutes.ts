@@ -29,10 +29,10 @@ productRoutes.get("/:slug", async (c) => {
 
 productRoutes.get("/:categories", async (c) => {
   const categories = c.req.param("categories");
-  const data = services.getCategories(categories);
+  const data = await services.getCategories(categories);
 
   return c.json({
-    message: "succes get all categories",
+    message: "succes get categories",
     data: data
   }, 200)
 });
