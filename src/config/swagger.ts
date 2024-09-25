@@ -160,7 +160,7 @@ export function registerSwaggerEndpoint(app: Hono) {
             },
           },
         },
-        "products/{categories}": {
+        "/products/{categories}": {
           get: {
             tags: ["Products"],
             summary: "Get products by categories",
@@ -197,7 +197,7 @@ export function registerSwaggerEndpoint(app: Hono) {
                 },
               }
             },
-          }
+          },
         },
         "/products/{categories}/{slug}": {
           get: {
