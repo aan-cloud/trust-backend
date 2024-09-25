@@ -22,8 +22,12 @@ productRoutes.get("/:category/:slug?", async (c) => {
   const slug = c.req.param("slug");
   const data = await services.getProductCategory(category, slug);
 
-  console.log('Category:', category);
-  console.log('Slug:', slug);
+  if (data.length === 0) {
+    return c.json({
+      message: `Error to get data`,
+      data: `data is ${data.length}`
+    }, 404);
+  };
 
   return c.json({
     message: `Succes get product ${category} ${slug ? " " + slug : ""}`,
