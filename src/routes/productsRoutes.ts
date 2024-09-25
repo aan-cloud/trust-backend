@@ -6,7 +6,7 @@ const services = new ProductServices();
 const productRoutes = new Hono();
 
 productRoutes.get("/", async (c) => {
-  const data = await services.getAllProduct();
+  const data = await services.getAllProducts();
 
   return c.json(
     {
@@ -17,26 +17,39 @@ productRoutes.get("/", async (c) => {
   );
 });
 
-productRoutes.get("/:category/:slug?", async (c) => {
-  const category = c.req.param("category");
-  const slug = c.req.param("slug");
-  const data = await services.getProductCategory(category, slug);
-
-  if (data.length === 0) {
-    return c.json({
-      message: `Error to get data`,
-      data: `data is ${data.length}`
-    }, 404);
-  };
+productRoutes.get("/:slug", async (c) => {
+  const slug = c.req.param("slug")
+  const data = await services.getProductsSlug(slug);
 
   return c.json({
-    message: `Succes get product ${category} ${slug ? " " + slug : ""}`,
+    message: "succes get products slug",
+    data: data
+  }, 200);
+});
+
+productRoutes.get("/:categories", async (c) => {
+  const categories = c.req.param("categories");
+  const data = services.getCategories(categories);
+
+  return c.json({
+    message: "succes get all categories",
+    data: data
+  }, 200)
+});
+
+productRoutes.get("/:categories/:slug", async (c) => {
+  const categories = c.req.param("categories");
+  const slug = c.req.param("slug");
+  const data = await services.getCategoriesSlug(categories,slug);
+
+  return c.json({
+    message: `Succes get product ${categories} ${slug ? " " + slug : ""}`,
     data: data,
   });
 });
 
 productRoutes.delete("/", async (c) => {
-  const deletedData = await services.deleteAllProduct();
+  const deletedData = await services.deleteAllProducts();
 
   return c.json({
     message: `succes deleted ${deletedData.count} data`,
@@ -46,7 +59,7 @@ productRoutes.delete("/", async (c) => {
 
 productRoutes.delete("/:slug", async (c) => {
   const slug = c.req.param("slug");
-  const data = await services.deleteProductBySlug(slug);
+  const data = await services.deleteProductsBySlug(slug);
 
   return c.json(
     {
@@ -58,7 +71,7 @@ productRoutes.delete("/:slug", async (c) => {
 });
 
 productRoutes.post("/seed", async (c) => {
-  const postedData = await services.postSeedProduct(data_products);
+  const postedData = await services.postSeedProducts(data_products);
 
   return c.json({
     message: "succes add seed item",
@@ -68,7 +81,7 @@ productRoutes.post("/seed", async (c) => {
 
 productRoutes.post("/", async (c) => {
   const reqdata = await c.req.json();
-  const postedData = await services.postProduct(reqdata);
+  const postedData = await services.postProducts(reqdata);
 
   return c.json(
     {
