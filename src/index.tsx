@@ -2,11 +2,12 @@ import { serve } from "bun";
 import { swaggerUI } from "@hono/swagger-ui";
 import { cors } from "hono/cors";
 import { registerSwaggerEndpoint } from "./config/swagger";
-import "./routes/productsRoutes";
+import "./routes/product.route.ts";
 import { Hono } from "hono";
 import "./config/swagger";
 import WelcomePage from "./Welcome";
-import productRoutes from "./routes/productsRoutes";
+import productRoutes from "./routes/product.route.ts";
+import categoriesRoute from "./routes/categories.route";
 
 const app = new Hono();
 
@@ -17,6 +18,7 @@ app.get("/", async (c) => {
     <html lang="en">
       <head>
         <meta charset="UTF-8" />
+        <link rel="icon" type="image/svg+xml" href="/trust-logo.png" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Welcome to Trust API</title>
         <meta
@@ -36,6 +38,7 @@ registerSwaggerEndpoint(app);
 app.get("/ui", swaggerUI({ url: "/api-spec" }));
 
 app.route("/products", productRoutes);
+app.route("/categories", categoriesRoute);
 
 const port: number = 3000;
 console.log(`Server is running on port ${port}`);
