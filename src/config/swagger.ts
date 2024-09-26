@@ -205,7 +205,7 @@ export function registerSwaggerEndpoint(app: Hono) {
             },
           },
         },
-        "/categories/{slug}": {
+        "/categories/{category}/{slug}": {
           get: {
             tags: ["Categories"],
             summary: "Get products categories slug",
@@ -218,6 +218,14 @@ export function registerSwaggerEndpoint(app: Hono) {
                   type: "string",
                 },
               },
+              {
+                name: "category",
+                in: "path",
+                required: true,
+                schema: {
+                  type: "string"
+                }
+              }
             ],
             responses: {
               "200": {
