@@ -172,7 +172,7 @@ export function registerSwaggerEndpoint(app: Hono) {
             summary: "Get products by categories",
             parameters: [
               {
-                name: "categories",
+                name: "category",
                 in: "path",
                 required: true,
                 schema: {
