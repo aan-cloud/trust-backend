@@ -24,6 +24,16 @@ export function registerSwaggerEndpoint(app: Hono) {
           get: {
             tags: ["Products"],
             summary: "Mendapatkan daftar produk",
+            parameters: [
+              {
+                name: "name",
+                in: "query",
+                required: false,
+                schema: {
+                  type: "string"
+                }
+              }
+            ],
             responses: {
               "200": {
                 description: "success",
