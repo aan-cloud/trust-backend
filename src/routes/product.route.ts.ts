@@ -6,15 +6,24 @@ const services = new ProductServices();
 const productRoutes = new Hono();
 
 productRoutes.get("/", async (c) => {
-  const data = await services.getAllProducts();
+  const query = c.req.query('name');
 
-  return c.json(
-    {
-      message: "succes",
-      data: data,
-    },
-    200,
-  );
+  if (!query) {
+    const allProduct = await services.getAllProducts();
+    return c.json(
+      {
+        message: "succes",
+        data: allProduct,
+      },200);
+  };
+
+  const productByQuery = await services.searchProduct(query);
+
+  return c.json({
+    message: "succes get search products",
+    data: productByQuery
+  });
+
 });
 
 productRoutes.get("/:slug", async (c) => {
