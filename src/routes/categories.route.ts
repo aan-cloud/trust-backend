@@ -21,10 +21,9 @@ categoriesRoute.get("/:category", async (c) => {
     }, 200);
 });
 
-categoriesRoute.get("/:category/:slug", async (c) => {
+categoriesRoute.get("/:slug", async (c) => {
     const slug = c.req.param("slug");
-    const category = c.req.param("category");
-    const data = await services.getCategiesSlug(slug,category);
+    const data = await services.getCategiesSlug(slug);
 
     return c.json({
         message: "succes get categories slug",
