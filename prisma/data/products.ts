@@ -1,4 +1,4 @@
-export const data_products = [
+export const dataProducts = [
   {
     name: "Battery Charger",
     slug: "battery-charger",

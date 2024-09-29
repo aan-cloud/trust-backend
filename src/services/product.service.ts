@@ -12,9 +12,9 @@ export default class ProductServices {
   async getProductsSlug(slug: string) {
     return await prisma.products.findFirst({
       where: {
-        slug: slug
-      }
-    })
+        slug: slug,
+      },
+    });
   }
 
   async searchProduct(query: string) {
@@ -22,15 +22,15 @@ export default class ProductServices {
       where: {
         name: {
           contains: query,
-          mode: 'insensitive'
-        }
-      }
+          mode: "insensitive",
+        },
+      },
     });
-  };
+  }
 
   async deleteAllProducts() {
     return await prisma.products.deleteMany({});
-  };
+  }
 
   async deleteProductsBySlug(slug: string) {
     return await prisma.products.delete({
@@ -38,14 +38,7 @@ export default class ProductServices {
         slug: slug,
       },
     });
-  };
-
-  async postSeedProducts(data: product[]) {
-    return await prisma.products.createMany({
-      data: data,
-      skipDuplicates: true,
-    });
-  };
+  }
 
   async postProducts({
     name,
@@ -65,11 +58,15 @@ export default class ProductServices {
         image_url,
         description,
         price,
-        category,
         stock,
         created_at,
         updated_at,
+        category: {
+          connect: {
+            slug: category,
+          },
+        },
       },
     });
-  };
-};
+  }
+}

@@ -14,14 +14,28 @@ datasource db {
 }
 
 model products {
-  id String @id @default(uuid()) @db.Uuid
+  id          String @id @default(uuid()) @db.Uuid
+  name        String @unique
+  slug        String @unique
+  image_url   String
+  description String
+  price       Int
+  stock       Int
+
+  category   categories? @relation(fields: [categoryId], references: [id])
+  categoryId String?     @db.Uuid
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+}
+
+model categories {
+  id   String @id @default(uuid()) @db.Uuid
   name String @unique
   slug String @unique
-  image_url String
-  description String
-  price Int
-  category String
-  stock Int
-  created_at DateTime @default(now())
+
+  products products[]
+
+  created_at DateTime  @default(now())
   updated_at DateTime?
 }

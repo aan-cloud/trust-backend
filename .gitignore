@@ -12,7 +12,8 @@
 node_modules/
 
 # env
-.env*
+.env
+.env.local
 
 # logs
 logs/

@@ -30,7 +30,7 @@ app.get("/", async (c) => {
       <body>
         <WelcomePage />
       </body>
-    </html>,
+    </html>
   );
 });
 
@@ -40,7 +40,7 @@ app.get("/ui", swaggerUI({ url: "/api-spec" }));
 app.route("/products", productRoutes);
 app.route("/categories", categoriesRoute);
 
-const port: number = 3000;
+const port = process.env.PORT || 3000;
 console.log(`Server is running on port ${port}`);
 
 serve({

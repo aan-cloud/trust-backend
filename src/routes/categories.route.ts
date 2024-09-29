@@ -4,31 +4,39 @@ import CategoriesServices from "../services/categories.service";
 const services = new CategoriesServices();
 const categoriesRoute = new Hono();
 
-categoriesRoute.get("/:category", async (c) => {
-    const category = c.req.param("category");
-    const data = await services.getCategories(category);
+categoriesRoute.get("/", async (c) => {
+  const categories = await services.getCategories();
 
-    if (!data.length) {
-        return c.json({
-            message: "error get categories",
-            data: data
-        }, 404);
-    };
-
-    return c.json({
-        message: "succes get categories product",
-        data: data
-    }, 200);
+  return c.json(
+    {
+      message: "succes get categories",
+      data: categories,
+    },
+    200
+  );
 });
 
 categoriesRoute.get("/:slug", async (c) => {
-    const slug = c.req.param("slug");
-    const data = await services.getCategiesSlug(slug);
+  const slug = c.req.param("slug");
+  const category = await services.getCategoryBySlug(slug);
 
-    return c.json({
-        message: "succes get categories slug",
-        data: data
-    }, 200);
+  if (!category) {
+    return c.json(
+      {
+        message: "error get category by slug",
+        data: category,
+      },
+      404
+    );
+  }
+
+  return c.json(
+    {
+      message: "succes get category slug, including products",
+      data: category,
+    },
+    200
+  );
 });
 
 export default categoriesRoute;

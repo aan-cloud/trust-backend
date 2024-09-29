@@ -16,8 +16,8 @@ export function registerSwaggerEndpoint(app: Hono) {
         },
         {
           name: "Categories",
-          description: "Products Categories Operation"
-        }
+          description: "Products Categories Operation",
+        },
       ],
       paths: {
         "/products": {
@@ -30,9 +30,9 @@ export function registerSwaggerEndpoint(app: Hono) {
                 in: "query",
                 required: false,
                 schema: {
-                  type: "string"
-                }
-              }
+                  type: "string",
+                },
+              },
             ],
             responses: {
               "200": {
@@ -118,9 +118,9 @@ export function registerSwaggerEndpoint(app: Hono) {
                 in: "path",
                 required: true,
                 schema: {
-                  type: "string"
-                }
-              }
+                  type: "string",
+                },
+              },
             ],
             responses: {
               "200": {
@@ -137,15 +137,15 @@ export function registerSwaggerEndpoint(app: Hono) {
                           type: "array",
                           items: {
                             $ref: "#/components/schemas/Product",
-                          }
+                          },
                         },
                       },
                     },
                   },
                 },
-              }
+              },
             },
-          }
+          },
         },
         "/products/seed": {
           post: {
@@ -176,49 +176,10 @@ export function registerSwaggerEndpoint(app: Hono) {
             },
           },
         },
-        "/categories/{category}": {
-          get: {
-            tags: ["Categories"],
-            summary: "Get products by categories",
-            parameters: [
-              {
-                name: "category",
-                in: "path",
-                required: true,
-                schema: {
-                  type: "string"
-                }
-              }
-            ],
-            responses: {
-              "200": {
-                description: "Succes get products by categories",
-                content: {
-                  "application/json": {
-                    schema: {
-                      type: "object",
-                      properties: {
-                        message: {
-                          type: "string",
-                        },
-                        data: {
-                          type: "array",
-                          items: {
-                            $ref: "#/components/schemas/Product",                          
-                          }
-                        },
-                      },
-                    },
-                  },
-                },
-              }
-            },
-          },
-        },
         "/categories/{slug}": {
           get: {
             tags: ["Categories"],
-            summary: "Get products categories slug",
+            summary: "Get categories slug, including products",
             parameters: [
               {
                 name: "slug",
@@ -227,12 +188,11 @@ export function registerSwaggerEndpoint(app: Hono) {
                 schema: {
                   type: "string",
                 },
-              }
+              },
             ],
             responses: {
               "200": {
-                description:
-                  "Succes get producst category by slug",
+                description: "Succes get producst category by slug",
                 content: {
                   "application/json": {
                     schema: {

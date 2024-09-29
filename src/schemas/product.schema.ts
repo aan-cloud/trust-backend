@@ -7,10 +7,10 @@ const productSchema = z.object({
   image_url: z.string(),
   description: z.string(),
   price: z.number(),
-  category: z.string(),
   stock: z.number(),
   created_at: z.date().optional(),
   updated_at: z.date().optional(),
+  category: z.string(),
 });
 
 export default productSchema;

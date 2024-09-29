@@ -1,12 +1,12 @@
 import { Hono } from "hono";
 import ProductServices from "../services/product.service";
-import { data_products } from "../seed/products";
+import { dataProducts } from "../../prisma/data/products";
 
 const services = new ProductServices();
 const productRoutes = new Hono();
 
 productRoutes.get("/", async (c) => {
-  const query = c.req.query('name');
+  const query = c.req.query("name");
 
   if (!query) {
     const allProduct = await services.getAllProducts();
@@ -14,26 +14,30 @@ productRoutes.get("/", async (c) => {
       {
         message: "succes",
         data: allProduct,
-      },200);
-  };
+      },
+      200
+    );
+  }
 
   const productByQuery = await services.searchProduct(query);
 
   return c.json({
     message: "succes get search products",
-    data: productByQuery
+    data: productByQuery,
   });
-
 });
 
 productRoutes.get("/:slug", async (c) => {
-  const slug = c.req.param("slug")
+  const slug = c.req.param("slug");
   const data = await services.getProductsSlug(slug);
 
-  return c.json({
-    message: "succes get products slug",
-    data: data
-  }, 200);
+  return c.json(
+    {
+      message: "succes get products slug",
+      data: data,
+    },
+    200
+  );
 });
 
 productRoutes.delete("/", async (c) => {
@@ -54,17 +58,8 @@ productRoutes.delete("/:slug", async (c) => {
       message: `succes deleted ${slug}`,
       data: data,
     },
-    200,
+    200
   );
-});
-
-productRoutes.post("/seed", async (c) => {
-  const postedData = await services.postSeedProducts(data_products);
-
-  return c.json({
-    message: "succes add seed item",
-    data: postedData,
-  });
 });
 
 productRoutes.post("/", async (c) => {
@@ -76,7 +71,7 @@ productRoutes.post("/", async (c) => {
       message: "add item succes",
       data: postedData,
     },
-    200,
+    200
   );
 });
 
