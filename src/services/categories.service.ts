@@ -10,7 +10,7 @@ export default class CategoriesServices{
     };
 
     async getCategiesSlug(slug: string) {
-        return await prisma.products.findFirst({
+        return await prisma.products.findMany({
             where: {
                 slug: slug
             }

@@ -27,7 +27,7 @@ categoriesRoute.get("/:slug", async (c) => {
 
     return c.json({
         message: "succes get categories slug",
-        data: [data]
+        data: data
     }, 200);
 });
 
