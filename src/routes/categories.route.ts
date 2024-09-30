@@ -5,12 +5,25 @@ const services = new CategoriesServices();
 const categoriesRoute = new Hono();
 
 categoriesRoute.get("/", async (c) => {
-  const categories = await services.getCategories();
+  const category = c.req.param("category");
+
+  if (!category) {
+    const categories = await services.getCategories();
+    return c.json(
+      {
+        message: "succes get categories",
+        data: categories,
+      },
+      200
+    );
+  };
+
+  const searchCategory = services.searchcategory(category);
 
   return c.json(
     {
-      message: "succes get categories",
-      data: categories,
+      message: "succes get category",
+      data: searchCategory,
     },
     200
   );
