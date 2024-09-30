@@ -7,6 +7,17 @@ export default class CategoriesServices {
         products: true,
       },
     });
+  };
+
+  async searchcategory(query: string) {
+    return await prisma.categories.findMany({
+      where: {
+        name: {
+          contains: query,
+          mode: "insensitive",
+        },
+      },
+    });
   }
 
   async getCategoryBySlug(slug: string) {
@@ -16,5 +27,5 @@ export default class CategoriesServices {
         products: true,
       },
     });
-  }
-}
+  };
+};
