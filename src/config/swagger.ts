@@ -190,7 +190,7 @@ export function registerSwaggerEndpoint(app: Hono) {
                 },
               },
             ],
-            response: {
+            responses: {
               "200": {
                 description: "success",
                 content: {
@@ -212,7 +212,7 @@ export function registerSwaggerEndpoint(app: Hono) {
                   },
                 },
               },
-            }
+            },
           }
         },
         "/categories/{slug}": {
