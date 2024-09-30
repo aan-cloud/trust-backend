@@ -176,6 +176,45 @@ export function registerSwaggerEndpoint(app: Hono) {
             },
           },
         },
+        "/categories": {
+          get: {
+            tags: ["Categories"],
+            summary: "Mendapat kan semua categories",
+            parameters: [
+              {
+                name: "category",
+                in: "query",
+                required: false,
+                schema: {
+                  type: "string",
+                },
+              },
+            ],
+            response: {
+              "200": {
+                description: "success",
+                content: {
+                  "application/json": {
+                    schema: {
+                      type: "object",
+                      properties: {
+                        message: {
+                          type: "string",
+                        },
+                        data: {
+                          type: "array",
+                          items: {
+                            $ref: "#/components/schemas/Categories",
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            }
+          }
+        },
         "/categories/{slug}": {
           get: {
             tags: ["Categories"],
@@ -250,6 +289,20 @@ export function registerSwaggerEndpoint(app: Hono) {
               },
             },
           },
+          Categories: {
+            type: "object",
+            properties: {
+              id: {
+                type: "number"
+              },
+              name: {
+                type: "string"
+              },
+              slug: {
+                type: "string"
+              },
+            }
+          }
         },
       },
     });
