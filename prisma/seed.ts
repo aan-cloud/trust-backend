@@ -6,7 +6,7 @@ import { dataProducts } from "./data/products";
 
 async function main() {
   for (const category of dataCategories) {
-    const newCategoryResult = await prisma.categories.upsert({
+    const newCategoryResult = await prisma.category.upsert({
       where: { slug: category.slug },
       update: category,
       create: category,
@@ -22,7 +22,7 @@ async function main() {
       category: { connect: { slug: product.category } },
     };
 
-    const newProductResult = await prisma.products.upsert({
+    const newProductResult = await prisma.product.upsert({
       where: { slug: product.slug },
       update: productData,
       create: productData,
