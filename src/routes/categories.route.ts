@@ -14,9 +14,9 @@ categoriesRoute.get("/", async (c) => {
         message: "succes get categories",
         data: categories,
       },
-      200
+      200,
     );
-  };
+  }
 
   const searchCategory = services.searchcategory(category);
 
@@ -25,7 +25,7 @@ categoriesRoute.get("/", async (c) => {
       message: "succes get category",
       data: searchCategory,
     },
-    200
+    200,
   );
 });
 
@@ -39,7 +39,7 @@ categoriesRoute.get("/:slug", async (c) => {
         message: "error get category by slug",
         data: category,
       },
-      404
+      404,
     );
   }
 
@@ -48,7 +48,7 @@ categoriesRoute.get("/:slug", async (c) => {
       message: "succes get category slug, including products",
       data: category,
     },
-    200
+    200,
   );
 });
 

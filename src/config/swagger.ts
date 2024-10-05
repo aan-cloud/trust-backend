@@ -213,7 +213,7 @@ export function registerSwaggerEndpoint(app: Hono) {
                 },
               },
             },
-          }
+          },
         },
         "/categories/{slug}": {
           get: {
@@ -293,16 +293,16 @@ export function registerSwaggerEndpoint(app: Hono) {
             type: "object",
             properties: {
               id: {
-                type: "number"
+                type: "number",
               },
               name: {
-                type: "string"
+                type: "string",
               },
               slug: {
-                type: "string"
+                type: "string",
               },
-            }
-          }
+            },
+          },
         },
       },
     });
