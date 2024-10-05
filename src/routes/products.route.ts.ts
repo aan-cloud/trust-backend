@@ -15,7 +15,7 @@ productRoutes.get("/", async (c) => {
         message: "succes",
         data: allProduct,
       },
-      200
+      200,
     );
   }
 
@@ -36,7 +36,7 @@ productRoutes.get("/:slug", async (c) => {
       message: "succes get products slug",
       data: data,
     },
-    200
+    200,
   );
 });
 
@@ -58,7 +58,7 @@ productRoutes.delete("/:slug", async (c) => {
       message: `succes deleted ${slug}`,
       data: data,
     },
-    200
+    200,
   );
 });
 
@@ -71,7 +71,7 @@ productRoutes.post("/", async (c) => {
       message: "add item succes",
       data: postedData,
     },
-    200
+    200,
   );
 });
 
