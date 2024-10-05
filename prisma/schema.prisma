@@ -13,29 +13,81 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model products {
+model User {
+  id String @id @default(uuid())
+
+  username String @unique
+  email String @unique
+
+  password Password?
+
+  carts Cart[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Password {
+  id String @id @default(uuid())
+
+  hash String 
+
+  user User @relation(fields: [userId], references: [id])
+  userId String @unique
+}
+
+model Product {
   id          String @id @default(uuid()) @db.Uuid
   name        String @unique
   slug        String @unique
-  image_url   String
+  imageUrl   String
   description String
   price       Int
   stock       Int
 
-  category   categories? @relation(fields: [categoryId], references: [id])
+  cartItems CartItem[]
+
+  category   Category? @relation(fields: [categoryId], references: [id])
   categoryId String?     @db.Uuid
 
-  created_at DateTime  @default(now())
-  updated_at DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
 }
 
-model categories {
+model Category {
   id   String @id @default(uuid()) @db.Uuid
   name String @unique
   slug String @unique
 
-  products products[]
+  products Product[]
 
-  created_at DateTime  @default(now())
-  updated_at DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+}
+
+model CartItem {
+  id String @id @default(uuid())
+
+  product Product @relation(fields: [productId], references: [id])
+  productId String 
+
+  quantity Int @default(1)
+
+  cart Cart @relation(fields: [cartId], references: [id])
+  cartId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Cart {
+  id String @id @default(uuid())
+
+  user User @relation(fields: [userId], references: [id])
+  userId String
+
+  items CartItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
