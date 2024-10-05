@@ -7,7 +7,8 @@
     "db:migrate:dev": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
-    "db:seed": "prisma db seed"
+    "db:seed": "prisma db seed",
+    "prettier": "bunx prettier --write ."
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
