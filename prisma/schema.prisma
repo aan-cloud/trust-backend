@@ -37,7 +37,7 @@ model Password {
 }
 
 model Product {
-  id          String @id @default(uuid()) @db.Uuid
+  id          String @id @default(uuid())
   name        String @unique
   slug        String @unique
   imageUrl   String
@@ -48,14 +48,14 @@ model Product {
   cartItems CartItem[]
 
   category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String?     @db.Uuid
+  categoryId String? 
 
   createdAt DateTime  @default(now())
   updatedAt DateTime?
 }
 
 model Category {
-  id   String @id @default(uuid()) @db.Uuid
+  id   String @id @default(uuid())
   name String @unique
   slug String @unique
 
