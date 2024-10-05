@@ -2,12 +2,13 @@ import { serve } from "bun";
 import { swaggerUI } from "@hono/swagger-ui";
 import { cors } from "hono/cors";
 import { registerSwaggerEndpoint } from "./config/swagger";
-import "./routes/product.route.ts";
+import "./routes/products.route.ts";
 import { Hono } from "hono";
 import "./config/swagger";
 import WelcomePage from "./Welcome";
-import productRoutes from "./routes/product.route.ts";
+import productRoutes from "./routes/products.route.ts";
 import categoriesRoute from "./routes/categories.route";
+import userRoute from "./routes/users.route";
 
 const app = new Hono();
 
@@ -30,7 +31,7 @@ app.get("/", async (c) => {
       <body>
         <WelcomePage />
       </body>
-    </html>
+    </html>,
   );
 });
 
@@ -39,6 +40,7 @@ app.get("/ui", swaggerUI({ url: "/api-spec" }));
 
 app.route("/products", productRoutes);
 app.route("/categories", categoriesRoute);
+app.route("users", userRoute)
 
 const port = process.env.PORT || 3000;
 console.log(`Server is running on port ${port}`);
