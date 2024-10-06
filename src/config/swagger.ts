@@ -325,7 +325,7 @@ export function registerSwaggerEndpoint(app: Hono) {
             },
           },
         },
-        "/user": {
+        "/users": {
           get: {
             tags: ["User"],
             summary: "Get all users",
@@ -354,7 +354,7 @@ export function registerSwaggerEndpoint(app: Hono) {
             },
           },
         },
-        "/user/{username}": {
+        "/users/{username}": {
           get: {
             tags: ["User"],
             summary: "Get user by username",
