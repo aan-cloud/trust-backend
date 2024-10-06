@@ -30,7 +30,7 @@ authRoute.post("/login", async (c) => {
 });
 
 authRoute.get("/me", async (c) => {
-  const jwtToken = c.req.header("Authorization")?.replace("Bearer", "");
+  const jwtToken = c.req.header("Authorization")?.replace("Bearer ", "").trim();
 
   if (!jwtToken) {
     return c.json({ message: "User not defined" }, 401);
