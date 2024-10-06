@@ -9,6 +9,7 @@ import WelcomePage from "./Welcome";
 import productRoutes from "./routes/products.route.ts";
 import categoriesRoute from "./routes/categories.route";
 import userRoute from "./routes/users.route";
+import authRoute from "./routes/auth.route";
 
 const app = new Hono();
 
@@ -38,9 +39,11 @@ app.get("/", async (c) => {
 registerSwaggerEndpoint(app);
 app.get("/ui", swaggerUI({ url: "/api-spec" }));
 
+// API route
 app.route("/products", productRoutes);
 app.route("/categories", categoriesRoute);
-app.route("users", userRoute)
+app.route("/users", userRoute);
+app.route("/auth", authRoute);
 
 const port = process.env.PORT || 3000;
 console.log(`Server is running on port ${port}`);
