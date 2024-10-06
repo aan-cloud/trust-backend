@@ -1,4 +1,3 @@
-import { password } from "bun";
 import { Hono } from "hono";
 
 export function registerSwaggerEndpoint(app: Hono) {
@@ -21,13 +20,74 @@ export function registerSwaggerEndpoint(app: Hono) {
         },
         {
           name: "Auth",
-          description: "authentication user"
+          description: "Authentication user",
         },
         {
           name: "User",
-          description: "get user"
-        }
+          description: "Get user",
+        },
       ],
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: "http",
+            scheme: "bearer",
+            bearerFormat: "JWT",
+          },
+        },
+        schemas: {
+          Product: {
+            type: "object",
+            properties: {
+              id: { type: "string" },
+              name: { type: "string" },
+              slug: { type: "string" },
+              image_url: { type: "string" },
+              description: { type: "string" },
+              price: { type: "number" },
+              category: { type: "string" },
+              stock: { type: "number" },
+            },
+          },
+          Categories: {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+              slug: { type: "string" },
+            },
+          },
+          Users: {
+            type: "object",
+            properties: {
+              username: { type: "string" },
+              email: { type: "string" },
+            },
+          },
+          Profile: {
+            type: "object",
+            properties: {
+              username: { type: "string" },
+              email: { type: "string" },
+            },
+          },
+          Register: {
+            type: "object",
+            properties: {
+              username: { type: "string" },
+              email: { type: "string" },
+              password: { type: "string" },
+            },
+          },
+          Login: {
+            type: "object",
+            properties: {
+              email: { type: "string" },
+              password: { type: "string" },
+            },
+          },
+        },
+      },
+      security: [{ bearerAuth: [] }],
       paths: {
         "/products": {
           get: {
@@ -69,7 +129,7 @@ export function registerSwaggerEndpoint(app: Hono) {
           },
           delete: {
             tags: ["Products"],
-            summary: "Menghapus semua product",
+            summary: "Menghapus semua produk",
             responses: {
               "200": {
                 description: "Produk berhasil dihapus",
@@ -133,7 +193,7 @@ export function registerSwaggerEndpoint(app: Hono) {
             ],
             responses: {
               "200": {
-                description: "Succes get products by slug",
+                description: "Success get products by slug",
                 content: {
                   "application/json": {
                     schema: {
@@ -162,7 +222,7 @@ export function registerSwaggerEndpoint(app: Hono) {
             summary: "Post Seed Data",
             responses: {
               "201": {
-                description: "Succes Add Seed Products",
+                description: "Success Add Seed Products",
                 content: {
                   "application/json": {
                     schema: {
@@ -188,7 +248,7 @@ export function registerSwaggerEndpoint(app: Hono) {
         "/categories": {
           get: {
             tags: ["Categories"],
-            summary: "Mendapat kan semua categories",
+            summary: "Mendapatkan semua categories",
             parameters: [
               {
                 name: "category",
@@ -227,7 +287,7 @@ export function registerSwaggerEndpoint(app: Hono) {
         "/categories/{slug}": {
           get: {
             tags: ["Categories"],
-            summary: "Get categories slug, including products",
+            summary: "Get categories by slug, including products",
             parameters: [
               {
                 name: "slug",
@@ -240,7 +300,7 @@ export function registerSwaggerEndpoint(app: Hono) {
             ],
             responses: {
               "200": {
-                description: "Succes get producst category by slug",
+                description: "Success get products category by slug",
                 content: {
                   "application/json": {
                     schema: {
@@ -269,9 +329,9 @@ export function registerSwaggerEndpoint(app: Hono) {
         "/user": {
           get: {
             tags: ["User"],
-            summary: "get all user",
+            summary: "Get all users",
             responses: {
-              200: {
+              "200": {
                 description: "success",
                 content: {
                   "application/json": {
@@ -291,14 +351,14 @@ export function registerSwaggerEndpoint(app: Hono) {
                     },
                   },
                 },
-              }
-            }
-          }
+              },
+            },
+          },
         },
         "/user/{username}": {
           get: {
             tags: ["User"],
-            summary: "get all user",
+            summary: "Get user by username",
             parameters: [
               {
                 name: "username",
@@ -310,7 +370,7 @@ export function registerSwaggerEndpoint(app: Hono) {
               },
             ],
             responses: {
-              200: {
+              "200": {
                 description: "success",
                 content: {
                   "application/json": {
@@ -330,9 +390,9 @@ export function registerSwaggerEndpoint(app: Hono) {
                     },
                   },
                 },
-              }
-            }
-          }
+              },
+            },
+          },
         },
         "/auth/register": {
           post: {
@@ -350,7 +410,7 @@ export function registerSwaggerEndpoint(app: Hono) {
             },
             responses: {
               "201": {
-                description: "Register succes",
+                description: "Register success",
                 content: {
                   "application/json": {
                     schema: {
@@ -376,7 +436,7 @@ export function registerSwaggerEndpoint(app: Hono) {
         "/auth/login": {
           post: {
             tags: ["Auth"],
-            summary: "user login",
+            summary: "User login",
             requestBody: {
               content: {
                 "application/json": {
@@ -416,7 +476,7 @@ export function registerSwaggerEndpoint(app: Hono) {
           get: {
             tags: ["Auth"],
             summary: "Get user profile",
-            security: [{ AuthorizationBearer: [] }],
+            security: [{ bearerAuth: [] }],
             responses: {
               "200": {
                 description: "Authorized",
@@ -436,108 +496,7 @@ export function registerSwaggerEndpoint(app: Hono) {
                 description: "Unauthorized",
               },
             },
-          }
-        },
-      },
-      components: {
-        securitySchemes: {
-          AuthorizationBearer: {
-            type: "http",
-            scheme: "bearer",
-            bearerFormat: "JWT",
           },
-        },
-        schemas: {
-          Product: {
-            type: "object",
-            properties: {
-              id: {
-                type: "string",
-              },
-              name: {
-                type: "string",
-              },
-              slug: {
-                type: "string",
-              },
-              image_url: {
-                type: "string",
-              },
-              description: {
-                type: "string",
-              },
-              price: {
-                type: "number",
-              },
-              category: {
-                type: "string",
-              },
-              stock: {
-                type: "number",
-              },
-            },
-          },
-          Categories: {
-            type: "object",
-            properties: {
-              id: {
-                type: "number",
-              },
-              name: {
-                type: "string",
-              },
-              slug: {
-                type: "string",
-              },
-            },
-          },
-          Users: {
-            type: "object",
-            properties: {
-              id: {
-                type: "number"
-              },
-              username: {
-                type: "string"
-              },
-            }
-          },
-          Register: {
-            type: "object",
-            properties: {
-              username: {
-                type: "string"
-              },
-              email: {
-                type: "string"
-              },
-              password: {
-                type: "string"
-              }
-            }
-          },
-          Login: {
-            type: "object",
-            properties: {
-              email: {
-                type: "string"
-              },
-              password: {
-                type: "string"
-              }
-            }
-          },
-          Profile: {
-            type: "object",
-            properties: {
-              username: {
-                type: "string"
-              },
-              email: {
-                type: "string"
-              }
-            }
-          }
         },
       },
     });
