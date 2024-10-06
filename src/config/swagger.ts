@@ -416,6 +416,16 @@ export function registerSwaggerEndpoint(app: Hono) {
           get: {
             tags: ["Auth"],
             summary: "Get user profile",
+            parameters: [
+              {
+                name: "Authorization",
+                in: "header",
+                required: true,
+                schema: {
+                  type: "string"
+                }
+              }
+            ],
             security: [{ AuthorizationBearer: [] }],
             responses: {
               "200": {
