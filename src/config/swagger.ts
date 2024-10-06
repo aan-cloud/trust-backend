@@ -87,7 +87,6 @@ export function registerSwaggerEndpoint(app: Hono) {
           },
         },
       },
-      security: [{ bearerAuth: [] }],
       paths: {
         "/products": {
           get: {
