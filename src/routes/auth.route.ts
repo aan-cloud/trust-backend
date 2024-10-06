@@ -22,7 +22,7 @@ authRoute.post("/login", async (c) => {
     const token = await authService.login(userData);
     return c.json({
       message: "login succes",
-      token,
+      data: token,
     });
   } catch (error: any) {
     return c.json({ message: "Login failed", error: error.message }, 401);
