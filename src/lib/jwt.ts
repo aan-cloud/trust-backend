@@ -1,7 +1,5 @@
-import * as crypo from "../lib/crypto";
 import { createJWT, validateJWT } from "oslo/jwt";
-import { TimeSpan } from "oslo/.";
-import prisma from "./db";
+import { TimeSpan } from "oslo";
 
 // Encoded token secret
 const getEncodedSecret = () => {
