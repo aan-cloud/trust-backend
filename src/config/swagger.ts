@@ -373,7 +373,7 @@ export function registerSwaggerEndpoint(app: Hono) {
             },
           },
         },
-        "auth/login": {
+        "/auth/login": {
           post: {
             tags: ["Auth"],
             summary: "user login",
@@ -412,36 +412,32 @@ export function registerSwaggerEndpoint(app: Hono) {
             },
           },
         },
-        "auth/me": {
+        "/auth/me": {
           get: {
             tags: ["Auth"],
-            summary: "get user profile",
+            summary: "Get user profile",
             security: [{ AuthorizationBearer: [] }],
             responses: {
-              200: {
+              "200": {
                 description: "Authorized",
                 content: {
                   "application/json": {
                     schema: {
                       type: "object",
                       properties: {
-                        message: {
-                          type: "string",
-                        },
-                        data: {
-                          $ref: "#/components/schemas/Profile",
-                        },
+                        message: { type: "string" },
+                        data: { $ref: "#/components/schemas/Profile" },
                       },
                     },
                   },
                 },
               },
-              401: {
+              "401": {
                 description: "Unauthorized",
               },
             },
           }
-        }
+        },
       },
       components: {
         schemas: {
