@@ -18,7 +18,7 @@ export const passwordSchema = z
   );
 
 export const registerSchema = loginSchema.extend({
-  name: z.string().min(3, "name is required").max(220),
+  username: z.string().min(3, "name is required").max(220),
   email: z.string().email().min(1).max(40),
   password: passwordSchema,
 });

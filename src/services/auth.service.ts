@@ -19,7 +19,7 @@ export default class AuthServices {
     const user = await prisma.user.create({
       data: {
         email: userData.email,
-        username: userData.name,
+        username: userData.username,
         password: {
           create: {
             hash: hashedPassword,
