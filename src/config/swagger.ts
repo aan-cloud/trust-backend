@@ -1,3 +1,4 @@
+import { password } from "bun";
 import { Hono } from "hono";
 
 export function registerSwaggerEndpoint(app: Hono) {
@@ -18,6 +19,14 @@ export function registerSwaggerEndpoint(app: Hono) {
           name: "Categories",
           description: "Products Categories Operation",
         },
+        {
+          name: "Auth",
+          description: "authentication user"
+        },
+        {
+          name: "User",
+          description: "get user"
+        }
       ],
       paths: {
         "/products": {
@@ -257,6 +266,182 @@ export function registerSwaggerEndpoint(app: Hono) {
             },
           },
         },
+        "/user": {
+          get: {
+            tags: ["User"],
+            summary: "get all user",
+            responses: {
+              200: {
+                description: "success",
+                content: {
+                  "application/json": {
+                    schema: {
+                      type: "object",
+                      properties: {
+                        message: {
+                          type: "string",
+                        },
+                        data: {
+                          type: "array",
+                          items: {
+                            $ref: "#/components/schemas/Users",
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              }
+            }
+          }
+        },
+        "/user/{username}": {
+          get: {
+            tags: ["User"],
+            summary: "get all user",
+            parameters: [
+              {
+                name: "username",
+                in: "path",
+                required: true,
+                schema: {
+                  type: "string",
+                },
+              },
+            ],
+            responses: {
+              200: {
+                description: "success",
+                content: {
+                  "application/json": {
+                    schema: {
+                      type: "object",
+                      properties: {
+                        message: {
+                          type: "string",
+                        },
+                        data: {
+                          type: "array",
+                          items: {
+                            $ref: "#/components/schemas/Users",
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              }
+            }
+          }
+        },
+        "/auth/register": {
+          post: {
+            tags: ["Auth"],
+            summary: "Register new user",
+            requestBody: {
+              content: {
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/Register",
+                  },
+                },
+              },
+              required: true,
+            },
+            responses: {
+              "201": {
+                description: "Register succes",
+                content: {
+                  "application/json": {
+                    schema: {
+                      type: "object",
+                      properties: {
+                        message: {
+                          type: "string",
+                        },
+                        data: {
+                          $ref: "#/components/schemas/Register",
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              "400": {
+                description: "Error",
+              },
+            },
+          },
+        },
+        "auth/login": {
+          post: {
+            tags: ["Auth"],
+            summary: "user login",
+            requestBody: {
+              content: {
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/Login",
+                  },
+                },
+              },
+              required: true,
+            },
+            responses: {
+              "201": {
+                description: "Login success",
+                content: {
+                  "application/json": {
+                    schema: {
+                      type: "object",
+                      properties: {
+                        message: {
+                          type: "string",
+                        },
+                        data: {
+                          $ref: "#/components/schemas/Login",
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              "400": {
+                description: "Error",
+              },
+            },
+          },
+        },
+        "auth/me": {
+          get: {
+            tags: ["Auth"],
+            summary: "get user profile",
+            security: [{ AuthorizationBearer: [] }],
+            responses: {
+              200: {
+                description: "Authorized",
+                content: {
+                  "application/json": {
+                    schema: {
+                      type: "object",
+                      properties: {
+                        message: {
+                          type: "string",
+                        },
+                        data: {
+                          $ref: "#/components/schemas/Profile",
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              401: {
+                description: "Unauthorized",
+              },
+            },
+          }
+        }
       },
       components: {
         schemas: {
@@ -303,6 +488,53 @@ export function registerSwaggerEndpoint(app: Hono) {
               },
             },
           },
+          Users: {
+            type: "object",
+            properties: {
+              id: {
+                type: "number"
+              },
+              username: {
+                type: "string"
+              },
+            }
+          },
+          Register: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string"
+              },
+              email: {
+                type: "string"
+              },
+              password: {
+                type: "string"
+              }
+            }
+          },
+          Login: {
+            type: "object",
+            properties: {
+              email: {
+                type: "string"
+              },
+              password: {
+                type: "string"
+              }
+            }
+          },
+          Profile: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string"
+              },
+              email: {
+                type: "string"
+              }
+            }
+          }
         },
       },
     });
