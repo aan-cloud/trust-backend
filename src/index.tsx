@@ -13,7 +13,7 @@ import authRoute from "./routes/auth.route";
 
 const app = new Hono();
 
-app.use(cors());
+app.use('*', cors());
 
 app.get("/", async (c) => {
   return await c.html(
