@@ -38,7 +38,7 @@ authRoute.get("/me", async (c) => {
 
   try {
     const user = await authService.profile(jwtToken);
-    return c.json({ message: "succes get profile", data: user }, 200);
+    return c.json({ message: "succes get profile", user }, 200);
   } catch (error) {
     return c.json({ message: "failed to get profile" }, 401);
   }
