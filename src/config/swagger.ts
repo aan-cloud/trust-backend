@@ -26,6 +26,9 @@ export function registerSwaggerEndpoint(app: Hono) {
           name: "User",
           description: "Get user",
         },
+        {
+          name: "Cart"
+        }
       ],
       components: {
         securitySchemes: {
@@ -85,6 +88,32 @@ export function registerSwaggerEndpoint(app: Hono) {
               password: { type: "string" },
             },
           },
+          Cart: {
+            type: "object",
+            properties: {
+              id: { type: "string"},
+              product: {
+                 type: "object",
+                 properties: {
+                  id: { type: "number"},  
+                  name: { type: "string"}, 
+                  slug:  { type: "string"},
+                  imageUrl:  { type: "string"},
+                  description:  { type: "string"},  
+                  price:  { type: "number"},
+                  stock:   { type: "number"} 
+                 }
+              },
+              createdAt: { type: "string" }
+            }
+          },
+          CartItem: {
+            type: "object",
+            properties: {
+              productId: { type: "string" },
+              quantity: { type: "number" }
+            }
+          }
         },
       },
       paths: {
@@ -497,6 +526,59 @@ export function registerSwaggerEndpoint(app: Hono) {
             },
           },
         },
+        "/cart": {
+          get: {
+            tags: ["Cart"],
+            summary: "get the all item in the cart",
+            security: [{ bearerAuth: [] }],
+            responses: {
+              "200": {
+                description: "Cart",
+                content: {
+                  "application/json": {
+                    schema: {
+                      type: "object",
+                      properties: {
+                        $ref: "#/components/schemas/Cart"
+                      },
+                    },
+                  },
+                },
+              },
+              "401": {
+                description: "Unauthorized",
+              },
+            },
+          }
+        },
+        "/cart/items": {
+          post: {
+            tags: ["Products"],
+            summary: "Menambahkan produk baru",
+            requestBody: {
+              content: {
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/CartItem",
+                  },
+                },
+              },
+              required: true,
+            },
+            responses: {
+              "201": {
+                description: "Produk berhasil ditambahkan ke Cart",
+                content: {
+                  "application/json": {
+                  },
+                },
+              },
+              "400": {
+                description: "Gagal menambah kan produk ke cart",
+              },
+            },
+          }
+        }
       },
     });
   });
