@@ -10,10 +10,11 @@ import productRoutes from "./routes/products.route.ts";
 import categoriesRoute from "./routes/categories.route";
 import userRoute from "./routes/users.route";
 import authRoute from "./routes/auth.route";
+import cartRoute from "./routes/cart.route";
 
 const app = new Hono();
 
-app.use('*', cors());
+app.use("*", cors());
 
 app.get("/", async (c) => {
   return await c.html(
@@ -44,6 +45,7 @@ app.route("/products", productRoutes);
 app.route("/categories", categoriesRoute);
 app.route("/users", userRoute);
 app.route("/auth", authRoute);
+app.route("/cart", cartRoute);
 
 const port = process.env.PORT || 3000;
 console.log(`Server is running on port ${port}`);
