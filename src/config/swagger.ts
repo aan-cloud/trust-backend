@@ -555,6 +555,7 @@ export function registerSwaggerEndpoint(app: Hono) {
           post: {
             tags: ["Cart"],
             summary: "Menambahkan produk baru",
+            security: [{ bearerAuth: [] }],
             requestBody: {
               content: {
                 "application/json": {
