@@ -553,7 +553,7 @@ export function registerSwaggerEndpoint(app: Hono) {
         },
         "/cart/items": {
           post: {
-            tags: ["Products"],
+            tags: ["Cart"],
             summary: "Menambahkan produk baru",
             requestBody: {
               content: {
