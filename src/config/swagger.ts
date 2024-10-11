@@ -92,18 +92,7 @@ export function registerSwaggerEndpoint(app: Hono) {
             type: "object",
             properties: {
               id: { type: "string"},
-              product: {
-                 type: "object",
-                 properties: {
-                  id: { type: "number"},  
-                  name: { type: "string"}, 
-                  slug:  { type: "string"},
-                  imageUrl:  { type: "string"},
-                  description:  { type: "string"},  
-                  price:  { type: "number"},
-                  stock:   { type: "number"} 
-                 }
-              },
+              product: { type: "object"},
               createdAt: { type: "string" }
             }
           },
