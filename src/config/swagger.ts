@@ -27,8 +27,8 @@ export function registerSwaggerEndpoint(app: Hono) {
           description: "Get user",
         },
         {
-          name: "Cart"
-        }
+          name: "Cart",
+        },
       ],
       components: {
         securitySchemes: {
@@ -91,18 +91,18 @@ export function registerSwaggerEndpoint(app: Hono) {
           Cart: {
             type: "object",
             properties: {
-              id: { type: "string"},
-              product: { type: "object"},
-              createdAt: { type: "string" }
-            }
+              id: { type: "string" },
+              product: { type: "object" },
+              createdAt: { type: "string" },
+            },
           },
           CartItem: {
             type: "object",
             properties: {
               productId: { type: "string" },
-              quantity: { type: "number" }
-            }
-          }
+              quantity: { type: "number" },
+            },
+          },
         },
       },
       paths: {
@@ -528,7 +528,7 @@ export function registerSwaggerEndpoint(app: Hono) {
                     schema: {
                       type: "array",
                       properties: {
-                        $ref: "#/components/schemas/Cart"
+                        $ref: "#/components/schemas/Cart",
                       },
                     },
                   },
@@ -538,7 +538,7 @@ export function registerSwaggerEndpoint(app: Hono) {
                 description: "Unauthorized",
               },
             },
-          }
+          },
         },
         "/cart/items": {
           post: {
@@ -559,16 +559,15 @@ export function registerSwaggerEndpoint(app: Hono) {
               "201": {
                 description: "Produk berhasil ditambahkan ke Cart",
                 content: {
-                  "application/json": {
-                  },
+                  "application/json": {},
                 },
               },
               "400": {
                 description: "Gagal menambah kan produk ke cart",
               },
             },
-          }
-        }
+          },
+        },
       },
     });
   });
