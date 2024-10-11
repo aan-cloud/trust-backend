@@ -526,7 +526,7 @@ export function registerSwaggerEndpoint(app: Hono) {
                 content: {
                   "application/json": {
                     schema: {
-                      type: "object",
+                      type: "array",
                       properties: {
                         $ref: "#/components/schemas/Cart"
                       },
