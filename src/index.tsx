@@ -1,18 +1,16 @@
 import { serve } from "bun";
-import { swaggerUI } from "@hono/swagger-ui";
+import { apiReference } from "@scalar/hono-api-reference";
 import { cors } from "hono/cors";
-import { registerSwaggerEndpoint } from "./config/swagger";
 import "./routes/products.route.ts";
-import { Hono } from "hono";
-import "./config/swagger";
 import WelcomePage from "./Welcome";
 import productRoutes from "./routes/products.route.ts";
 import categoriesRoute from "./routes/categories.route";
 import userRoute from "./routes/users.route";
 import authRoute from "./routes/auth.route";
 import cartRoute from "./routes/cart.route";
+import { OpenAPIHono } from "@hono/zod-openapi";
 
-const app = new Hono();
+const app = new OpenAPIHono();
 
 app.use("*", cors());
 
@@ -37,8 +35,24 @@ app.get("/", async (c) => {
   );
 });
 
-registerSwaggerEndpoint(app);
-app.get("/ui", swaggerUI({ url: "/api-spec" }));
+app.get(
+  "/ui",
+  apiReference({
+    pageTitle: "CheckCafe API Reference",
+    spec: {
+      url: "/openapi.json",
+    },
+  }),
+);
+
+app.doc("/openapi.json", {
+  openapi: "3.1.0",
+  info: {
+    version: "1.0.0",
+    title: "CheckCafe API",
+    description: "API for CheckCafe project.",
+  },
+});
 
 // API route
 app.route("/products", productRoutes);

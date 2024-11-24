@@ -22,3 +22,13 @@ export const registerSchema = loginSchema.extend({
   email: z.string().email().min(1).max(40),
   password: passwordSchema,
 });
+
+export const ResponseSuccess = z.object({
+  message: z.string(),
+  token: z.string()
+});
+
+export const Errorresponse = z.object({
+  message: z.string(),
+  error: z.string()
+});
