@@ -1,0 +1,39 @@
+name: Trust CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # Bun CI
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Install Bun
+      - name: Install Bun
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          echo "$HOME/.bun/bin" >> $GITHUB_PATH
+
+      # Use Bun to install dependencies
+      - name: Install dependencies with Bun
+        run: bun install
+
+      # Run linting (optional but recommended)
+      - name: Run lint
+        run: bun run lint  # If you have a linting script
+
+      # Run tests
+      # - name: Run tests
+      #   run: bun test  # Use Bun for running tests
+
+  # Additional jobs (e.g., for linting, testing, or other services) can be added here.
