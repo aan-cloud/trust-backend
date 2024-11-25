@@ -9,7 +9,7 @@
     "db:studio": "prisma studio",
     "db:seed": "prisma db seed",
     "lint": "bunx eslint src/index.tsx",
-    "formatter": "bunx prettier --write . && bunx eslint src/index.tsx"
+    "formatter": "bunx prettier --write ."
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
