@@ -35,6 +35,7 @@
     "@types/bun": "latest",
     "eslint": "^9.15.0",
     "globals": "^15.12.0",
+    "prettier": "3.3.3",
     "tsx": "^4.19.1",
     "typescript-eslint": "^8.15.0"
   },
