@@ -8,12 +8,14 @@
     "db:migrate:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "db:seed": "prisma db seed",
+    "lint": "bunx eslint src/index.tsx",
     "formatter": "bunx prettier --write . && bunx eslint src/index.tsx"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@hono/eslint-config": "^1.0.2",
     "@hono/swagger-ui": "^0.4.1",
     "@hono/zod-openapi": "^0.16.0",
     "@prisma/client": "5.19.1",
@@ -39,6 +41,6 @@
   "module": "index.ts",
   "type": "module",
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.7.2"
   }
 }
