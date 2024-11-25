@@ -29,13 +29,13 @@ Trust API is part of the **Trust** software suite build base-on REST API, design
 
 ## Entity Relationship Diagram/Database Design
 
-This section will be updated soon.
+![ERD](erd.svg)
 
 ---
 
 ## Software Architecture
 
-This section will be filled by **Lucicart**. Placeholder for now.
+Trust using Monolithic Client-Server Architecture connected each other, see the visual diagram [Lucidcart](https://lucid.app/lucidchart/b3dfe397-2b57-4cfa-ad16-3245d673ebc9/edit?viewport_loc=-1028%2C-413%2C555%2C229%2C0_0&invitationId=inv_04e3e4d3-32f0-4679-9229-493535695c3e)
 
 ---
 
