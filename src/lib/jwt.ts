@@ -1,5 +1,21 @@
 import { createJWT, validateJWT } from "oslo/jwt";
 import { TimeSpan } from "oslo";
+import prisma from "./db";
+
+// Create token
+const createToken = async (
+  userId: string,
+  expiresIn: TimeSpan
+): Promise<string> => {
+  const secret = getEncodedSecret();
+  const options = {
+    subject: userId,
+    expiresIn,
+    includeIssuedTimestamp: true,
+  };
+
+  return await createJWT("HS256", secret, {}, options);
+};
 
 // Encoded token secret
 const getEncodedSecret = () => {
@@ -18,14 +34,7 @@ export const createAccesToken = async (
   expiresInMinute: number = 1440,
 ) => {
   try {
-    const secretKey = getEncodedSecret();
-    const option = {
-      subject: userId,
-      expiresIn: new TimeSpan(expiresInMinute, "m"),
-      includeIssuedTimestamp: true,
-    };
-
-    return await createJWT("HS256", secretKey, {}, option);
+    return await createToken(userId, new TimeSpan(expiresInMinute, "m"))
   } catch (error) {
     throw new Error("Failed to create acces token");
   }
@@ -40,3 +49,33 @@ export const validateToken = async (token: string) => {
     throw new Error("Token invalid");
   }
 };
+
+// Create Refresh Token 
+export const createRefreshToken = async (
+  userId: string,
+  expiresInDay: number = 14
+): Promise<String> => {
+  try {
+    const issuedAt = new Date();
+    // Create expired date
+    const expiresAt = new Date(
+      issuedAt.getTime() + expiresInDay * 24 * 60 * 60 * 1000
+    )
+
+    const tokenExpiry = new TimeSpan(expiresInDay, "d");
+    const refreshToken = await createToken(userId, tokenExpiry);
+
+    await prisma.userToken.create({
+      data: {
+        userId,
+        token: refreshToken,
+        issuedAt,
+        expiresAt
+      }
+    });
+
+    return refreshToken
+  } catch (error) {
+    throw new Error("Failed to create refresh token.", { cause: error });
+  }
+}
