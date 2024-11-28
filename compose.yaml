@@ -25,7 +25,6 @@ services:
         #     - redis_volume_data:/data
         ports:
             - 6380:6380
-
 #     volumes:
 #       - postgres-data:/var/lib/postgresql/data
 
