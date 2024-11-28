@@ -142,30 +142,33 @@ export const login = async (userData: LoginSchema) => {
         roles: existingUser.roles,
     };
 };
-// Ambil id user dari token nya
+
 export const profile = async (id: string) => {
-    const user = await prisma.user.findUnique({
-        where: { id },
-        select: {
-            roles: true,
-            username: true,
-            email: true,
-            id: true,
-        },
-    });
-    // await redis.setex(id, 3600, JSON.stringify(user))
-    return user;
+    // Inline caching tecnique
+    const isUserCached = await redis.get(id);
+
+    if (!isUserCached) {
+        const user = await prisma.user.findUnique({
+            where: { id },
+            select: {
+                roles: true,
+                username: true,
+                email: true,
+                id: true,
+            },
+        });
+        await redis.setex(id, 3600, JSON.stringify(user));
+        return user;
+    }
+
+    return JSON.parse(isUserCached);
 };
 
 export const regenToken = async (refreshToken: string): Promise<any> => {
     return await processToken(refreshToken, true);
 };
 
-export const changePassword = async ({
-    userData,
-}: {
-    userData: ChangePasswordSchema;
-}) => {
+export const changePassword = async (userData: ChangePasswordSchema) => {
     const user = await prisma.user.findUnique({
         where: {
             username: userData.userName,
@@ -181,7 +184,7 @@ export const changePassword = async ({
 
     const newPassword = await crypto.hashValue(userData.newPassword);
 
-    const updatedPassword = await prisma.user.update({
+    await prisma.user.update({
         data: {
             password: newPassword,
         },
@@ -191,7 +194,9 @@ export const changePassword = async ({
         },
     });
 
-    return updatedPassword;
+    return {
+        message: "Success changed password",
+    };
 };
 
 export const logOut = async (refreshToken: string) => {
