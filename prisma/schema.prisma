@@ -17,30 +17,60 @@ model User {
   id String @id @default(uuid())
 
   username String @unique
-  email String @unique
+  email    String @unique
 
-  password Password?
+  password String
 
-  carts Cart[]
+  carts  Cart[]
+  roles  UserRole[]  @relation("UserRoles")
+  tokens UserToken[] @relation("UserTokens")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("users")
 }
 
-model Password {
+model Role {
+  id          String @id @default(uuid())
+  roleName    String @db.VarChar(50)
+  description String @db.VarChar(100)
+
+  userRoles UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole {
   id String @id @default(uuid())
 
-  hash String 
+  userId String
+  user   User   @relation("UserRoles", fields: [userId], references: [id])
+  roleId String
+  role   Role   @relation(fields: [roleId], references: [id])
 
-  user User @relation(fields: [userId], references: [id])
-  userId String @unique
+  @@map("user_roles")
+}
+
+model UserToken {
+  id    String @id @default(uuid())
+  token String
+
+  userId String
+  user   User   @relation("UserTokens", fields: [userId], references: [id], onDelete: Cascade)
+
+  issuedAt  DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([token, expiresAt])
+  @@map("user_tokens")
 }
 
 model Product {
   id          String @id @default(uuid())
   name        String @unique
   slug        String @unique
-  imageUrl   String
+  imageUrl    String
   description String
   price       Int
   stock       Int
@@ -48,7 +78,7 @@ model Product {
   cartItems CartItem[]
 
   category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String? 
+  categoryId String?
 
   createdAt DateTime  @default(now())
   updatedAt DateTime?
@@ -68,12 +98,12 @@ model Category {
 model CartItem {
   id String @id @default(uuid())
 
-  product Product @relation(fields: [productId], references: [id])
-  productId String 
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
 
   quantity Int @default(1)
 
-  cart Cart @relation(fields: [cartId], references: [id])
+  cart   Cart   @relation(fields: [cartId], references: [id])
   cartId String
 
   createdAt DateTime @default(now())
@@ -83,7 +113,7 @@ model CartItem {
 model Cart {
   id String @id @default(uuid())
 
-  user User @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
   userId String
 
   items CartItem[]

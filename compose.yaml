@@ -1,21 +1,30 @@
 services:
-  backend:
-    build: .
-    ports:
-      - "3000:3000"
-    env_file:
-      - path: .env.render
-        required: true
-    depends_on:
-      - database
-  database:
-    image: postgres:alpine
-    ports:
-      - "5432:5432"
-    env_file:
-      - path: .env
-        required: true
-    command: ["postgres", "-c", "log_statement=all"]
+    # backend:
+    #   build: .
+    #   ports:
+    #     - "3000:3000"
+    #   env_file:
+    #     - path: .env.render
+    #       required: true
+    #   depends_on:
+    #     - database
+    #      - cache
+    database:
+        image: postgres:alpine
+        ports:
+            - "5432:5432"
+        env_file:
+            - path: .env
+              required: true
+        command: ["postgres", "-c", "log_statement=all"]
+    redis:
+        image: redis:latest
+        container_name: redis
+        restart: always
+        # volumes:
+        #     - redis_volume_data:/data
+        ports:
+            - 6380:6380
 #     volumes:
 #       - postgres-data:/var/lib/postgresql/data
 

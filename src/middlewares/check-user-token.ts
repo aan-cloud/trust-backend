@@ -1,52 +1,50 @@
+import { Context } from "hono";
 import { createMiddleware } from "hono/factory";
-import { getCookie } from "hono/cookie";
+import { validateToken } from "../libs/jwt";
+import db from "../libs/db";
 
-import prisma from "../lib/db";
-import { validateToken } from "../lib/jwt";
+const authMiddleware = createMiddleware(async (c: Context, next) => {
+    const token = extractToken(c.req.header("Authorization"));
 
-type Env = {
-  Variables: {
-    user:
-      | {
-          id: string;
+    if (!token) {
+        return respondWithError(c, "Authorization token is required!", 401);
+    }
+
+    try {
+        const decodedToken = await validateToken(token);
+        const userId = decodedToken?.subject;
+
+        if (!userId || typeof userId !== "string" || userId.length === 0) {
+            return respondWithError(c, "Invalid user ID in token!", 401);
         }
-      | any;
-  };
+
+        const user = await db.user.findUnique({
+            where: { id: userId },
+            select: {
+                id: true,
+            },
+        });
+
+        if (!user) {
+            return respondWithError(c, "User not found!", 404);
+        }
+
+        c.set("user", {
+            id: user.id,
+        });
+
+        await next();
+    } catch (error) {
+        return respondWithError(c, "Authentication failed", 401);
+    }
+});
+
+const extractToken = (authHeader: string | undefined): string | null => {
+    return authHeader ? authHeader.split(" ")[1] : null;
 };
 
-export const checkUserToken = createMiddleware<Env>(async (c, next) => {
-  const tokenCookie = getCookie(c, "token");
-  const authHeader = c.req.header("Authorization");
+const respondWithError = (c: Context, message: string, status: number) => {
+    return c.json({ message }, { status });
+};
 
-  // Get the token from cookies or header
-  const token = tokenCookie
-    ? tokenCookie
-    : authHeader
-      ? authHeader.split(" ")[1]
-      : null;
-
-  if (!token) {
-    return c.json({ message: "Not allowed token is required" }, 404);
-  }
-
-  const decodedToken = await validateToken(token);
-
-  if (!decodedToken) {
-    return c.json({ message: "Not allowed. Token is invalid" }, 401);
-  }
-
-  const userId = decodedToken.subject;
-
-  if (!userId) {
-    return c.json({ message: "user ID is not don't exist" }, 401);
-  }
-
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { id: true },
-  });
-
-  c.set("user", user);
-
-  await next();
-});
+export default authMiddleware;

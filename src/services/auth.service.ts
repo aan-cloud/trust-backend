@@ -1,71 +1,204 @@
-import prisma from "../lib/db";
-import { loginSchema, registerSchema } from "../schemas/auth.schema";
+import prisma from "../libs/db";
+import { redis } from "../libs/db";
+import {
+    loginSchema,
+    registerSchema,
+    changePasswordSchema,
+} from "../schemas/auth.schema";
 import { z } from "zod";
-import * as crypto from "../lib/crypto";
-import * as jwt from "../lib/jwt";
+import * as crypto from "../libs/crypto";
+import * as jwt from "../libs/jwt";
 
-export default class AuthServices {
-  async register(userData: z.infer<typeof registerSchema>) {
+type RegisterSchema = z.infer<typeof registerSchema>;
+type LoginSchema = z.infer<typeof loginSchema>;
+type ChangePasswordSchema = z.infer<typeof changePasswordSchema>;
+
+const processToken = async (
+    refreshToken: string,
+    isGenerated: boolean = false
+) => {
+    const isTokenExist = await prisma.userToken.findFirst({
+        where: { token: refreshToken, expiresAt: { gte: new Date() } },
+    });
+
+    if (!isTokenExist) {
+        throw new Error("Token is Invalid or expired!");
+    }
+
+    await prisma.userToken.delete({
+        where: { id: isTokenExist.id },
+    });
+
+    if (isGenerated) {
+        const [accessToken, refreshToken] = await Promise.all([
+            jwt.createAccesToken(isTokenExist.userId),
+            jwt.createRefreshToken(isTokenExist.userId),
+        ]);
+
+        return { accessToken, refreshToken };
+    }
+
+    return true;
+};
+
+export const register = async (userData: RegisterSchema) => {
+    return await prisma.$transaction(async (db) => {
+        const existingUser = await db.user.findFirst({
+            where: {
+                OR: [
+                    {
+                        username: userData.username,
+                    },
+                    {
+                        email: userData.email,
+                    },
+                ],
+            },
+        });
+
+        if (existingUser) {
+            throw new Error("Email or Username already registered!");
+        }
+
+        let role = await db.role.findFirst({
+            where: {
+                roleName: "USER",
+            },
+        });
+
+        if (!role) {
+            role = await db.role.create({
+                data: {
+                    roleName: "USER",
+                    description: "This role can be buyer only",
+                },
+            });
+        }
+
+        const hashedPassword = await crypto.hashValue(userData.password);
+
+        return await db.user.create({
+            data: {
+                username: userData.username,
+                password: hashedPassword,
+                email: userData.email,
+                roles: {
+                    create: {
+                        roleId: role.id,
+                    },
+                },
+            },
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                roles: true,
+            },
+        });
+    });
+};
+
+export const login = async (userData: LoginSchema) => {
     const existingUser = await prisma.user.findUnique({
-      where: { email: userData.email },
-    });
-
-    if (existingUser) {
-      throw new Error("Email already registered!");
-    }
-
-    const hashedPassword = await crypto.hashValue(userData.password);
-
-    const user = await prisma.user.create({
-      data: {
-        email: userData.email,
-        username: userData.username,
-        password: {
-          create: {
-            hash: hashedPassword,
-          },
+        where: {
+            username: userData.username,
         },
-      },
-      include: {
-        password: true,
-      },
+        select: {
+            id: true,
+            password: true,
+            username: true,
+            roles: {
+                select: {
+                    role: {
+                        select: {
+                            roleName: true,
+                        },
+                    },
+                },
+            },
+        },
     });
 
-    return user;
-  }
+    const verifyPassword = await crypto.verifyvalue(
+        userData.password,
+        existingUser?.password
+    );
 
-  async login(userData: z.infer<typeof loginSchema>) {
+    if (!existingUser || !verifyPassword) {
+        throw Error(
+            "User not found, input the correct email and password or register first"
+        );
+    }
+
+    const [accessToken, refreshToken] = await Promise.all([
+        jwt.createAccesToken(existingUser.id),
+        jwt.createRefreshToken(existingUser.id),
+    ]);
+
+    return {
+        username: existingUser.username,
+        accesToken: accessToken,
+        refreshToken: refreshToken,
+        roles: existingUser.roles,
+    };
+};
+
+export const profile = async (id: string) => {
+    // Inline caching tecnique
+    const isUserCached = await redis.get(id);
+
+    if (!isUserCached) {
+        const user = await prisma.user.findUnique({
+            where: { id },
+            select: {
+                roles: true,
+                username: true,
+                email: true,
+                id: true,
+            },
+        });
+        await redis.setex(id, 3600, JSON.stringify(user));
+        return user;
+    }
+
+    return JSON.parse(isUserCached);
+};
+
+export const regenToken = async (refreshToken: string): Promise<any> => {
+    return await processToken(refreshToken, true);
+};
+
+export const changePassword = async (userData: ChangePasswordSchema) => {
     const user = await prisma.user.findUnique({
-      where: { email: userData.email },
-      include: { password: true },
+        where: {
+            username: userData.userName,
+            email: userData.email,
+        },
     });
 
-    if (
-      !user ||
-      !(await crypto.verifyvalue(userData.password, user.password?.hash))
-    ) {
-      throw new Error("Email or password is incorrect");
+    if (!user) {
+        throw new Error(
+            "User not found. Can't change password, please enter the correct email and username"
+        );
     }
 
-    const userId = user.id.toString();
+    const newPassword = await crypto.hashValue(userData.newPassword);
 
-    const createAccessToken = await jwt.createAccesToken(userId);
-
-    return createAccessToken;
-  }
-
-  async profile(token: string) {
-    const decodedToken = await jwt.validateToken(token);
-    if (!decodedToken?.subject) {
-      throw new Error("Invalid or expired access token");
-    }
-
-    return await prisma.user.findUnique({
-      where: { id: decodedToken.subject },
-      select: {
-        username: true,
-        email: true,
-      },
+    await prisma.user.update({
+        data: {
+            password: newPassword,
+        },
+        where: {
+            username: userData.userName,
+            email: userData.email,
+        },
     });
-  }
-}
+
+    return {
+        message: "Success changed password",
+    };
+};
+
+export const logOut = async (refreshToken: string) => {
+    return await processToken(refreshToken);
+};
