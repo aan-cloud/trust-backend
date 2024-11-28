@@ -62,6 +62,7 @@ model UserToken {
   issuedAt  DateTime @default(now())
   expiresAt DateTime
 
+  @@index([token, expiresAt])
   @@map("user_tokens")
 }
 
