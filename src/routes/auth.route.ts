@@ -146,4 +146,127 @@ authRoute.openapi(
     }
 );
 
+authRoute.openapi(
+    {
+        method: "post",
+        path: "/refresh-token",
+        summary: "Refresh access token",
+        description: "Get the refresh token and access token",
+        tags: TAGS,
+        security: [{ AuthorizationBearer: [] }],
+        middleware: [authMiddleware],
+        request: {
+            body: {
+                content: {
+                    "application/json": {
+                        schema: authSchema.refreshSchema,
+                    },
+                },
+            },
+        },
+        responses: {
+            200: {
+                description: "Token successfully retrieved",
+            },
+            401: {
+                description: "Refresh token is missing or invalid",
+            },
+        },
+    },
+    async (c: Context) => {
+        const refreshToken = await c.req.json();
+
+        try {
+            const newToken = await authServices.regenToken(
+                refreshToken.refreshToken
+            );
+
+            return c.json(newToken, 201);
+        } catch (error: Error | any) {
+            return c.json({ error: error.message }, error.status || 401);
+        }
+    }
+);
+
+authRoute.openapi(
+    {
+        method: "post",
+        path: "/logout",
+        summary: "Logout from your account",
+        description: "Logout from your account, then delete the refresh token",
+        tags: TAGS,
+        security: [{ AuthorizationBearer: [] }],
+        middleware: [authMiddleware],
+        request: {
+            body: {
+                content: {
+                    "application/json": {
+                        schema: authSchema.refreshSchema,
+                    },
+                },
+            },
+        },
+        responses: {
+            200: {
+                description: "Logout Success",
+            },
+            401: {
+                description: "Refresh token is missing or invalid",
+            },
+        },
+    },
+    async (c: Context) => {
+        const refreshToken = await c.req.json();
+
+        try {
+            const logedOut = await authServices.logOut(refreshToken);
+            return c.json({ isLogedOut: logedOut }, 200);
+        } catch (error: Error | any) {
+            return c.json({ error: error.message }, error.status || 404);
+        }
+    }
+);
+
+authRoute.openapi(
+    {
+        method: "patch",
+        path: "/change-password",
+        summary: "Change password",
+        description: "Change password without old password",
+        tags: TAGS,
+        security: [{ AuthorizationBearer: [] }],
+        middleware: [authMiddleware],
+        request: {
+            body: {
+                content: {
+                    "application/json": {
+                        schema: authSchema.changePasswordSchema,
+                    },
+                },
+            },
+        },
+        responses: {
+            200: {
+                description: "Password succesfully changed",
+            },
+            401: {
+                description: "Invalid Password, Username, and Email",
+            },
+            500: {
+                description: "Server error",
+            },
+        },
+    },
+    async (c: Context) => {
+        const request = await c.req.json();
+        console.log(request);
+        try {
+            const newPassword = await authServices.changePassword(request);
+            return c.json(newPassword, 201);
+        } catch (error: Error | any) {
+            return c.json({ error: error.message }, error.status || 404);
+        }
+    }
+);
+
 export default authRoute;
