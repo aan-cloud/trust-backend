@@ -1,47 +1,49 @@
 {
-  "name": "trust-backend",
-  "scripts": {
-    "dev": "bun run --hot src/index.tsx",
-    "start": "bun run src/index.tsx",
-    "generate": "prisma generate",
-    "db:migrate:dev": "prisma migrate dev",
-    "db:migrate:deploy": "prisma migrate deploy",
-    "db:studio": "prisma studio",
-    "db:seed": "prisma db seed",
-    "lint": "bunx eslint src/index.tsx",
-    "formatter": "bunx prettier --write ."
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
-  },
-  "dependencies": {
-    "@hono/eslint-config": "^1.0.2",
-    "@hono/swagger-ui": "^0.4.1",
-    "@hono/zod-openapi": "^0.16.0",
-    "@prisma/client": "5.19.1",
-    "@scalar/hono-api-reference": "^0.5.159",
-    "@types/swagger-ui-express": "^4.1.6",
-    "deno": "^0.1.1",
-    "hono": "^4.6.1",
-    "oslo": "^1.2.1",
-    "prisma": "^5.19.1",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1",
-    "z": "^1.0.9",
-    "zod": "^3.23.8"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.15.0",
-    "@types/bun": "latest",
-    "eslint": "^9.15.0",
-    "globals": "^15.12.0",
-    "prettier": "3.3.3",
-    "tsx": "^4.19.1",
-    "typescript-eslint": "^8.15.0"
-  },
-  "module": "index.ts",
-  "type": "module",
-  "peerDependencies": {
-    "typescript": "^5.7.2"
-  }
+    "name": "trust-backend",
+    "scripts": {
+        "dev": "bun run --hot src/index.tsx",
+        "start": "bun run src/index.tsx",
+        "generate": "prisma generate",
+        "db:migrate:dev": "prisma migrate dev",
+        "db:migrate:deploy": "prisma migrate deploy",
+        "db:studio": "prisma studio",
+        "db:seed": "prisma db seed",
+        "lint": "bunx eslint src/index.tsx",
+        "formatter": "bunx prettier --write ."
+    },
+    "prisma": {
+        "seed": "tsx prisma/seed.ts"
+    },
+    "dependencies": {
+        "@hono/eslint-config": "^1.0.2",
+        "@hono/swagger-ui": "^0.4.1",
+        "@hono/zod-openapi": "^0.16.0",
+        "@hono/zod-validator": "^0.4.1",
+        "@prisma/client": "5.19.1",
+        "@scalar/hono-api-reference": "^0.5.159",
+        "@types/swagger-ui-express": "^4.1.6",
+        "deno": "^0.1.1",
+        "hono": "^4.6.1",
+        "ioredis": "^5.4.1",
+        "oslo": "^1.2.1",
+        "prisma": "^5.19.1",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.1",
+        "z": "^1.0.9",
+        "zod": "^3.23.8"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.15.0",
+        "@types/bun": "latest",
+        "eslint": "^9.15.0",
+        "globals": "^15.12.0",
+        "prettier": "3.3.3",
+        "tsx": "^4.19.1",
+        "typescript-eslint": "^8.15.0"
+    },
+    "module": "index.ts",
+    "type": "module",
+    "peerDependencies": {
+        "typescript": "^5.7.2"
+    }
 }
