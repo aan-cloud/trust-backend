@@ -1,29 +1,29 @@
 # Trust API
 
-Trust API is part of the **Trust** software suite build base-on REST API, designed with a **monolithic client-server architecture**. Trust API serves as the **main server**, built with high-performance technologies and leveraging built-in framework design patterns such as:
+Trust API is part of the **Trust** software suite build base-on REST API, designed with a ** client-server architecture**. Trust API serves as the **main server**, built with high-performance technologies and leveraging built-in framework design patterns such as:
 
-- Middleware Pattern
-- Routing Pattern
-- Dependency Injection (DI)
-- Chain of Responsibility
-- Modular Pattern
-- Functional Programming Pattern
+-   Middleware Pattern
+-   Routing Pattern
+-   Dependency Injection (DI)
+-   Chain of Responsibility
+-   Modular Pattern
+-   Functional Programming Pattern
 
 ---
 
 ## Table of Contents
 
-- [Entity Relationship Diagram/Database Design](#entity-relationship-diagramdatabase-design)
-- [Software Architecture](#software-architecture)
-- [Tech Stack](#tech-stack)
-- [Setup Project](#setup-project)
-  - [Install Dependencies](#install-dependencies)
-  - [Setup `.env` File](#setup-env-file)
-  - [Setup Docker Compose and Dockerfile](#setup-docker-compose-and-dockerfile)
-  - [Run Docker](#run-docker)
-  - [Generate and Migrate Prisma](#generate-and-migrate-prisma)
-- [API Endpoints](#api-endpoints)
-- [License](#license)
+-   [Entity Relationship Diagram/Database Design](#entity-relationship-diagramdatabase-design)
+-   [Software Architecture](#software-architecture)
+-   [Tech Stack](#tech-stack)
+-   [Setup Project](#setup-project)
+    -   [Install Dependencies](#install-dependencies)
+    -   [Setup `.env` File](#setup-env-file)
+    -   [Setup Docker Compose and Dockerfile](#setup-docker-compose-and-dockerfile)
+    -   [Run Docker](#run-docker)
+    -   [Generate and Migrate Prisma](#generate-and-migrate-prisma)
+-   [API Endpoints](#api-endpoints)
+-   [License](#license)
 
 ---
 
@@ -41,14 +41,14 @@ Trust using Monolithic Client-Server Architecture connected each other, see the 
 
 ## Tech Stack
 
-- **Hono**: A lightweight, high-performance web framework ideal for creating fast APIs with built-in middleware and routing.
-- **PostgreSQL**: A powerful, open-source relational database used for reliable and efficient data storage.
-- **Prisma**: An ORM (Object-Relational Mapping) tool that simplifies database management and queries in a type-safe manner.
-- **TypeScript**: A superset of JavaScript providing static typing and better tooling for large codebases.
-- **ESLint**: A code linter that helps maintain code quality and consistency by detecting and fixing problematic patterns.
-- **Prettier**: An opinionated code formatter to ensure consistent code style across the project.
-- **OpenAPI Swagger**: A tool to design and document APIs, ensuring clear and structured API specifications.
-- **Scalar**: A library for defining GraphQL scalar types, enabling custom data types for API development.
+-   **Hono**: A lightweight, high-performance web framework ideal for creating fast APIs with built-in middleware and routing.
+-   **PostgreSQL**: A powerful, open-source relational database used for reliable and efficient data storage.
+-   **Prisma**: An ORM (Object-Relational Mapping) tool that simplifies database management and queries in a type-safe manner.
+-   **TypeScript**: A superset of JavaScript providing static typing and better tooling for large codebases.
+-   **ESLint**: A code linter that helps maintain code quality and consistency by detecting and fixing problematic patterns.
+-   **Prettier**: An opinionated code formatter to ensure consistent code style across the project.
+-   **OpenAPI Swagger**: A tool to design and document APIs, ensuring clear and structured API specifications.
+-   **Scalar**: A library for defining GraphQL scalar types, enabling custom data types for API development.
 
 ---
 
@@ -57,6 +57,7 @@ Trust using Monolithic Client-Server Architecture connected each other, see the 
 ### Install Dependencies
 
 Run the following command to install the required dependencies:
+
 ```bash
 bun install
 ```
@@ -64,6 +65,7 @@ bun install
 ### Setup .env file
 
 Create a .env file in the root directory with the following values:
+
 ```yaml
 TOKEN_SECRET=
 
@@ -77,32 +79,35 @@ DATABASE_URL=
 ### Setup Docker Compose and Dockerfile
 
 Use the configuration below for docker-compose.yml:
+
 ```yaml
 services:
-  backend:
-    build: .
-    ports:
-      - "3000:3000"
-    env_file:
-      - path: .env.render
-        required: true
-    depends_on:
-      - database
-  database:
-    image: postgres:alpine
-    ports:
-      - "5432:5432"
-    env_file:
-      - path: .env
-        required: true
-    command: ["postgres", "-c", "log_statement=all"]
+    backend:
+        build: .
+        ports:
+            - "3000:3000"
+        env_file:
+            - path: .env.render
+              required: true
+        depends_on:
+            - database
+    database:
+        image: postgres:alpine
+        ports:
+            - "5432:5432"
+        env_file:
+            - path: .env
+              required: true
+        command: ["postgres", "-c", "log_statement=all"]
 #     volumes:
 #       - postgres-data:/var/lib/postgresql/data
 
 # volumes:
 #   postgres-data:
 ```
+
 .dockerfile:
+
 ```yaml
 # Use Bun image from the Docker Hub
 FROM oven/bun:debian
@@ -126,6 +131,7 @@ CMD ["bun", "start"]
 ### Run docker
 
 To start the services, run the following command:
+
 ```bash
 docker-compose up -d
 ```
@@ -133,6 +139,7 @@ docker-compose up -d
 ### Generate and Migrate Prisma
 
 Run the following commands to generate the Prisma client and apply database migrations:
+
 ```bash
 bun run generate
 bun run db:migrate:dev
@@ -142,13 +149,14 @@ bun run db:migrate:dev
 
 The following table lists the available authentication-related endpoints:
 
-| Method | Endpoint       | Description               |
-|--------|----------------|---------------------------|
-| POST   | `/auth/register` | Register a new user       |
-| POST   | `/auth/login`    | Login to an account       |
-| GET    | `/auth/me`       | Get user information      |
+| Method | Endpoint         | Description          |
+| ------ | ---------------- | -------------------- |
+| POST   | `/auth/register` | Register a new user  |
+| POST   | `/auth/login`    | Login to an account  |
+| GET    | `/auth/me`       | Get user information |
 
 ---
 
 ## License
+
 This project is licensed under the MIT License. See the [License](LICENSE) file for details.
