@@ -1,34 +1,89 @@
-import { z } from "zod";
+import { z } from "@hono/zod-openapi";
+
+const passwordSchema = z
+    .string()
+    .min(1, "Password is required")
+    .max(255)
+    .openapi({
+        description: "The password of the user.",
+        example: "secret",
+    });
+
+export const changePasswordSchema = z.object({
+    userName: z
+        .string()
+        .min(1, "Login is required")
+        .max(128)
+        .refine(
+            (value) => {
+                const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+                const isUsername = /^[a-zA-Z0-9_]{3,32}$/.test(value);
+                return isEmail || isUsername;
+            },
+            {
+                message: "Must be a valid username (3-32 characters) or email",
+            }
+        ),
+    email: z
+        .string()
+        .email("Invalid email address")
+        .max(128)
+        .transform((value) => value.toLowerCase())
+        .openapi({
+            description: "The email of the user.",
+            example: "user@mail.com",
+        }),
+    newPassword: passwordSchema,
+});
 
 export const loginSchema = z.object({
-  email: z.string().email().max(220),
-  password: z.string().min(10).max(220),
+    username: z
+        .string()
+        .min(1, "Login is required")
+        .max(128)
+        .refine(
+            (value) => {
+                const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+                const isUsername = /^[a-zA-Z0-9_]{3,32}$/.test(value);
+                return isEmail || isUsername;
+            },
+            {
+                message: "Must be a valid username (3-32 characters) or email",
+            }
+        )
+        .openapi({
+            description: "The username or email of the user.",
+            example: "user@mail.com or username123",
+        }),
+    password: passwordSchema,
 });
 
-export const passwordSchema = z
-  .string()
-  .min(8, "Password must be at least 8 characters long")
-  .max(255, "Password must not exceed 255 characters")
-  .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-  .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-  .regex(/[0-9]/, "Password must contain at least one number")
-  .regex(
-    /[^A-Za-z0-9]/,
-    "Password must contain at least one special character (e.g., @, #, $, %)",
-  );
-
-export const registerSchema = loginSchema.extend({
-  username: z.string().min(3, "name is required").max(220),
-  email: z.string().email().min(1).max(40),
-  password: passwordSchema,
+export const registerSchema = z.object({
+    username: z
+        .string()
+        .min(3, "Username must be at least 3 characters long")
+        .max(32, "Username cannot be longer than 32 characters")
+        .regex(
+            /^[a-zA-Z0-9_]+$/,
+            "Username can only contain alphanumeric characters or underscores"
+        )
+        .transform((value) => value.toLowerCase())
+        .openapi({
+            description: "The username of the user.",
+            example: "user123",
+        }),
+    email: z
+        .string()
+        .email("Invalid email address")
+        .max(128)
+        .transform((value) => value.toLowerCase())
+        .openapi({
+            description: "The email of the user.",
+            example: "user@mail.com",
+        }),
+    password: passwordSchema,
 });
 
-export const ResponseSuccess = z.object({
-  message: z.string(),
-  token: z.string()
-});
-
-export const Errorresponse = z.object({
-  message: z.string(),
-  error: z.string()
+export const refreshSchema = z.object({
+    refreshToken: z.string().min(1, "Refresh token is required").max(255),
 });
