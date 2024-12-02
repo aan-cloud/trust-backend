@@ -8,7 +8,7 @@
         "db:migrate:deploy": "prisma migrate deploy",
         "db:studio": "prisma studio",
         "db:seed": "prisma db seed",
-        "lint": "bunx eslint src/index.tsx",
+        "lint": "bunx eslint .",
         "formatter": "bunx prettier --write ."
     },
     "prisma": {
