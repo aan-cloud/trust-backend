@@ -34,8 +34,8 @@ const authMiddleware = createMiddleware(async (c: Context, next) => {
         });
 
         await next();
-    } catch (error) {
-        return respondWithError(c, "Authentication failed", 401);
+    } catch (error: Error | any) {
+        return respondWithError(c, `Authentication failed ${error.message}`, 401);
     }
 });
 

@@ -1,4 +1,4 @@
-import { createJWT, validateJWT, parseJWT } from "oslo/jwt";
+import { createJWT, validateJWT } from "oslo/jwt";
 import { TimeSpan } from "oslo";
 import prisma from "./db";
 
@@ -32,8 +32,8 @@ export const createAccesToken = async (
 ) => {
     try {
         return await createToken(userId, new TimeSpan(expiresInMinute, "m"));
-    } catch (error) {
-        throw new Error("Failed to create acces token");
+    } catch (error: Error | any) {
+        throw new Error("Failed to create acces token", error.message);
     }
 };
 
@@ -42,8 +42,8 @@ export const validateToken = async (token: string) => {
     try {
         const secretKey = await getEncodedSecret();
         return await validateJWT("HS256", secretKey, token);
-    } catch (error) {
-        throw new Error("Token invalid");
+    } catch (error: Error | any) {
+        throw new Error("Token invalid", error.message);
     }
 };
 
@@ -51,7 +51,7 @@ export const validateToken = async (token: string) => {
 export const createRefreshToken = async (
     userId: string,
     expiresInDay: number = 14
-): Promise<String> => {
+): Promise<string> => {
     try {
         const issuedAt = new Date();
         // Create expired date

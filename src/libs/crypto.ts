@@ -6,8 +6,8 @@ const bcrypt = new Bcrypt({ cost: saltRounds });
 export async function hashValue(password: string): Promise<string> {
     try {
         return await bcrypt.hash(password);
-    } catch (error) {
-        throw new Error("Failed to hash password");
+    } catch (error: Error | any) {
+        throw new Error("Failed to hash password", error.message);
     }
 }
 
@@ -17,7 +17,7 @@ export async function verifyvalue(
 ): Promise<boolean> {
     try {
         return await bcrypt.verify(hashedValue, value);
-    } catch (error) {
-        throw new Error("Failed to verify");
+    } catch (error: Error | any) {
+        throw new Error("Failed to verify", error.message);
     }
 }

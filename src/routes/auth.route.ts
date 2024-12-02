@@ -1,4 +1,4 @@
-import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
+import { OpenAPIHono } from "@hono/zod-openapi";
 import { Context } from "hono";
 import * as authServices from "../services/auth.service";
 import * as authSchema from "../schemas/auth.schema";
@@ -140,8 +140,8 @@ authRoute.openapi(
         try {
             const user = await authServices.profile(userId);
             return c.json({ message: "succes get profile", user }, 200);
-        } catch (error) {
-            return c.json({ message: "failed to get profile" }, 401);
+        } catch (error: Error | any) {
+            return c.json({ message: "failed to get profile", error: error.message}, 401);
         }
     }
 );
