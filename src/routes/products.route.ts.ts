@@ -1,6 +1,5 @@
 import { Hono } from "hono";
 import ProductServices from "../services/product.service";
-import { dataProducts } from "../../prisma/data/products";
 
 const services = new ProductServices();
 const productRoutes = new Hono();
