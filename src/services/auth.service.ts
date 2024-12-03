@@ -8,6 +8,8 @@ import {
 import { z } from "zod";
 import * as crypto from "../libs/crypto";
 import * as jwt from "../libs/jwt";
+import { google } from "googleapis";
+import { oauth2Client } from "../libs/oauth"
 
 type RegisterSchema = z.infer<typeof registerSchema>;
 type LoginSchema = z.infer<typeof loginSchema>;
@@ -201,4 +203,67 @@ export const changePassword = async (userData: ChangePasswordSchema) => {
 
 export const logOut = async (refreshToken: string) => {
     return await processToken(refreshToken);
+};
+
+export const googleAuthCallback = async (code: string) => {
+        const { tokens } = await oauth2Client.getToken(code);
+
+        oauth2Client.setCredentials(tokens);
+
+        const oauth2 = google.oauth2({
+            auth: oauth2Client,
+            version: 'v2'
+        });
+
+        const { data } = await oauth2.userinfo.get();
+
+        if(!data.email || !data.name || !data.id) {
+            throw new Error("Failed get google user data");
+        }
+
+        let existingUser = await prisma.user.findUnique({
+            where: {
+                email: data.email
+            }
+        });
+
+        const role = await prisma.role.findFirst({
+            where: {
+                roleName: "USER"
+            }
+        });
+
+        if (!existingUser) {
+            existingUser = await prisma.user.create({
+                data: {
+                    email: data.email,
+                    username: data.name,
+                    password: data.id,
+                    roles: {
+                        create: {
+                            role: {
+                                connect: {
+                                    id: role?.id
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            const [accessToken, refreshToken] = await Promise.all([
+                jwt.createAccesToken(existingUser.id),
+                jwt.createRefreshToken(existingUser.id),
+            ]);
+    
+            return {
+                email: existingUser.email,
+                userName: existingUser.username,
+                accessToken,
+                refreshToken
+            };
+        };
+
+        return {
+            message: "User Already"
+        }
 };

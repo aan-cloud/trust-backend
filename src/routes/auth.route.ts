@@ -3,6 +3,7 @@ import { Context } from "hono";
 import * as authServices from "../services/auth.service";
 import * as authSchema from "../schemas/auth.schema";
 import authMiddleware from "../middlewares/check-user-token";
+import { authorizationUrl } from "../libs/oauth";
 
 const authRoute = new OpenAPIHono();
 
@@ -266,6 +267,67 @@ authRoute.openapi(
         } catch (error: Error | any) {
             return c.json({ error: error.message }, error.status || 404);
         }
+    }
+);
+
+authRoute.openapi(
+    {
+        method: "get",
+        path: "/google",
+        summary: "Google Oauth Login",
+        description:
+            "This route is not fully supported by Swagger UI because it involves a redirect to a Google URL. This route only supports testing in the browser. You can copy the URL to the browser, and log in with your Google account.",
+        tags: TAGS,
+        responses: {
+            200: {
+                description: "User information successfully retrieved",
+            },
+            401: {
+                description: "Refresh token is missing or invalid",
+            },
+        },
+    },
+    async (c: Context) => {
+       return c.redirect(authorizationUrl);
+    }
+);
+
+authRoute.openapi(
+    {
+        method: "get",
+        path: "/google/callback",
+        summary: "Calback of Google Oauth",
+        description:
+            "After the /auth/google route is executed, you will be redirected to this route. This route is responsible for providing the success or failure status of obtaining user information from their Google account. When successful, a token will be generated.",
+        tags: TAGS,
+        responses: {
+            200: {
+                description: "User information successfully retrieved",
+            },
+            401: {
+                description: "Refresh token is missing or invalid",
+            },
+        },
+    },
+    async (c: Context) => {
+       const query = c.req.query('code');
+       console.log(query);
+
+       if (!query) {
+        throw new Error("Failed to get User information or Google code is invalid")
+       }
+
+       try {
+        const userData = await authServices.googleAuthCallback(query);
+
+        if (!userData) {
+            c.json({ messsage: userData}, 401);
+        }
+
+        return c.json(userData);
+       } catch (error: Error | any) {
+        return c.json({ error: error.message }, error.status || 404);
+       }
     }
 );
 
