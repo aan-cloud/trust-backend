@@ -21,9 +21,13 @@ model User {
 
   password String
 
+  description String? @db.VarChar(400)
+  avatarUrl String?
+
   carts  Cart[]
   roles  UserRole[]  @relation("UserRoles")
   tokens UserToken[] @relation("UserTokens")
+  products Product[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -50,6 +54,7 @@ model UserRole {
   role   Role   @relation(fields: [roleId], references: [id])
 
   @@map("user_roles")
+  @@unique([userId, roleId])
 }
 
 model UserToken {
@@ -76,6 +81,9 @@ model Product {
   stock       Int
 
   cartItems CartItem[]
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
   category   Category? @relation(fields: [categoryId], references: [id])
   categoryId String?

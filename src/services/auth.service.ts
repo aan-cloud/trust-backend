@@ -4,6 +4,7 @@ import {
     loginSchema,
     registerSchema,
     changePasswordSchema,
+    sellerRegisterSchema
 } from "../schemas/auth.schema";
 import { z } from "zod";
 import * as crypto from "../libs/crypto";
@@ -14,6 +15,7 @@ import { oauth2Client } from "../libs/oauth"
 type RegisterSchema = z.infer<typeof registerSchema>;
 type LoginSchema = z.infer<typeof loginSchema>;
 type ChangePasswordSchema = z.infer<typeof changePasswordSchema>;
+type SellerRegisterSchema = z.infer<typeof sellerRegisterSchema>
 
 const processToken = async (
     refreshToken: string,
@@ -267,3 +269,68 @@ export const googleAuthCallback = async (code: string) => {
             message: "User Already"
         }
 };
+
+export const registerSeller = async (userData: SellerRegisterSchema) => {
+    return await prisma.$transaction(async (db) => {
+        const checkUser = await db.user.findFirst({
+            where: {
+                id: userData.userId
+            }
+        });
+    
+        if(!checkUser) {
+            throw new Error("User not found!")
+        }
+    
+        let role = await db.role.findFirst({
+            where: { roleName: userData.switchToRole}
+        });
+    
+        if (!role) {
+            role = await db.role.create({
+                data: {
+                    roleName: userData.switchToRole,
+                    description: userData.description,
+                }
+            });
+        }
+    
+        await db.userRole.upsert({
+            where: {
+                userId_roleId: {
+                    userId: userData.userId,
+                    roleId: role.id,
+                },
+            },
+            update: {
+                roleId: role.id,
+            },
+            create: {
+                userId: userData.userId,
+                roleId: role.id,
+            },
+        });
+    
+        const updatedUser = await db.user.update({
+            where: { id: userData.userId },
+            data: {
+                avatarUrl: userData.avatarUrl,
+                description: userData.description
+            },
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                description: true,
+                avatarUrl: true,
+                createdAt: true,
+                updatedAt: true
+            }
+        });
+    
+        return {
+            message: "Switched to seller was successfully",
+            updatedUser
+        };
+    });
+}

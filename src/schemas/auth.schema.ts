@@ -87,3 +87,10 @@ export const registerSchema = z.object({
 export const refreshSchema = z.object({
     refreshToken: z.string().min(1, "Refresh token is required").max(255),
 });
+
+export const sellerRegisterSchema = z.object({
+    userId: z.string(),
+    switchToRole: z.string(),
+    description: z.string().max(300),
+    avatarUrl: z.string()
+});

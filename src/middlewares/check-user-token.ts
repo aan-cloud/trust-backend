@@ -1,7 +1,7 @@
 import { Context } from "hono";
 import { createMiddleware } from "hono/factory";
 import { validateToken } from "../libs/jwt";
-import db from "../libs/db";
+import prisma from "../libs/db";
 
 const authMiddleware = createMiddleware(async (c: Context, next) => {
     const token = extractToken(c.req.header("Authorization"));
@@ -18,11 +18,8 @@ const authMiddleware = createMiddleware(async (c: Context, next) => {
             return respondWithError(c, "Invalid user ID in token!", 401);
         }
 
-        const user = await db.user.findUnique({
+        const user = await prisma.user.findUnique({
             where: { id: userId },
-            select: {
-                id: true,
-            },
         });
 
         if (!user) {
@@ -39,11 +36,11 @@ const authMiddleware = createMiddleware(async (c: Context, next) => {
     }
 });
 
-const extractToken = (authHeader: string | undefined): string | null => {
+export const extractToken = (authHeader: string | undefined): string | null => {
     return authHeader ? authHeader.split(" ")[1] : null;
 };
 
-const respondWithError = (c: Context, message: string, status: number) => {
+export const respondWithError = (c: Context, message: string, status: number) => {
     return c.json({ message }, { status });
 };
 

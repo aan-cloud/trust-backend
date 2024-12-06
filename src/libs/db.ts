@@ -11,4 +11,9 @@ export const redis = new Redis({
     db: 4, // Defaults to 0
 });
 
+redis.on("error", (err) => {
+    console.error("Detailed Redis Error: ", err);
+    console.error(err.stack);
+});
+
 export default prisma;

@@ -331,4 +331,51 @@ authRoute.openapi(
     }
 );
 
+authRoute.openapi(
+    {
+        method: "patch",
+        path: "/register/seller",
+        summary: "Switched role to seller",
+        tags: TAGS,
+        security: [{ AuthorizationBearer: [] }],
+        middleware: [authMiddleware],
+        request: {
+            body: {
+                content: {
+                    "application/json": {
+                        schema: authSchema.sellerRegisterSchema,
+                    },
+                },
+            },
+        },
+        responses: {
+            201: {
+                description: "Swited to seller successfully",
+            },
+            400: {
+                description: "Switched to seller failed",
+            },
+        },
+    },
+    async (c: Context) => {
+        const body = await c.req.json();
+
+        body.userId = c.get("user").id;
+
+        console.log(body);
+
+        try {
+            const switchedRole = await authServices.registerSeller(body);
+            return c.json(switchedRole, 201);
+        } catch (error: Error | any) {
+            const errorMessage =
+                error instanceof Error ? error.message : "Unknown error";
+            return c.json(
+                { message: "Switced to seller failed", error: errorMessage },
+                400
+            );
+        }
+    }
+);
+
 export default authRoute;
