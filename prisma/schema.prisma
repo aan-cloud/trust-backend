@@ -75,32 +75,32 @@ model Product {
   id          String @id @default(uuid())
   name        String @unique
   slug        String @unique
-  imageUrl    String
   description String
   price       Int
   stock       Int
 
   cartItems CartItem[]
 
+  imageUrl Image[]
+
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
-  category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String?
-
   createdAt DateTime  @default(now())
   updatedAt DateTime?
+
+  @@map("products")
 }
 
-model Category {
-  id   String @id @default(uuid())
-  name String @unique
-  slug String @unique
+model Image {
+  id String @id @default(uuid())
 
-  products Product[]
+  imageUrl String @db.VarChar(200)
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime?
+  productId String
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("images")
 }
 
 model CartItem {
