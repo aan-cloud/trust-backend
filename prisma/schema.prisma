@@ -25,9 +25,12 @@ model User {
   avatarUrl String?
 
   carts  Cart[]
+  wishList WishList[]
   roles  UserRole[]  @relation("UserRoles")
   tokens UserToken[] @relation("UserTokens")
   products Product[]
+  comments Comment[]
+  productRates Rating[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -80,8 +83,10 @@ model Product {
   stock       Int
 
   cartItems CartItem[]
-
   imageUrl Image[]
+  wishListItems WishListItem[]
+  comments CommentItem[]
+  ratings RatingItem[]
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
@@ -89,6 +94,7 @@ model Product {
   createdAt DateTime  @default(now())
   updatedAt DateTime?
 
+  @@index([slug])
   @@map("products")
 }
 
@@ -100,6 +106,7 @@ model Image {
   productId String
   product Product @relation(fields: [productId], references: [id])
 
+  @@index([imageUrl])
   @@map("images")
 }
 
@@ -116,6 +123,9 @@ model CartItem {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([productId])
+  @@map("cart_items")
 }
 
 model Cart {
@@ -128,4 +138,96 @@ model Cart {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("carts")
 }
+
+model WishListItem {
+  id String @id @default(uuid())
+
+  productId String
+  product Product @relation(fields: [productId], references: [id])
+
+  wishListId String
+  wishList WishList @relation(fields: [wishListId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("wish_list_items")
+}
+
+model WishList {
+  id String @id @default(uuid())
+
+  userId String
+  user User @relation(fields: [userId], references: [id])
+
+  wishList WishListItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("wish_lists")
+}
+
+model CommentItem {
+  id String @id @default(uuid())
+  content String @db.VarChar(1000)
+
+  productId String
+  product Product @relation(fields: [productId], references: [id])
+
+  commentId String
+  comment Comment @relation(fields: [commentId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("comment_items")
+}
+
+model Comment {
+  id String @id @default(uuid())
+
+  userId String
+  user User @relation(fields: [userId], references: [id])
+
+  commentItems CommentItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("comments")
+}
+
+model RatingItem {
+  id String @id @default(uuid())
+
+  productId String
+  product Product @relation(fields: [productId], references: [id])
+
+  ratingId String
+  rating Rating @relation(fields: [ratingId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("rating_items")
+}
+
+model Rating {
+  id String @id @default(uuid())
+
+  userId String
+  user User @relation(fields: [userId], references: [id])
+
+  ratingItems RatingItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("ratings")
+}
+
+// Soon => Order, Message.
