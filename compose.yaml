@@ -1,14 +1,14 @@
 services:
-    # backend:
-    #   build: .
-    #   ports:
-    #     - "3000:3000"
-    #   env_file:
-    #     - path: .env.render
-    #       required: true
-    #   depends_on:
-    #     - database
-    #      - cache
+    backend:
+      build: .
+      ports:
+        - "3000:3000"
+      env_file:
+        - path: .env.render
+          required: true
+      depends_on:
+        - database
+         - cache
     database:
         image: postgres:alpine
         ports:
