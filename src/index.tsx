@@ -1,7 +1,6 @@
 import { serve } from "bun";
 import { apiReference } from "@scalar/hono-api-reference";
 import { cors } from "hono/cors";
-import "./routes/products.route.ts";
 import WelcomePage from "./Welcome";
 import authRoute from "./routes/auth.js";
 // import cartRoute from "./routes/cart.route"
