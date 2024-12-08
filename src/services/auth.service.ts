@@ -96,7 +96,11 @@ export const register = async (userData: RegisterSchema) => {
                 id: true,
                 username: true,
                 email: true,
-                roles: true,
+                roles: {
+                    select: {
+                        roleId: true
+                    }
+                }
             },
         });
     });
@@ -155,7 +159,15 @@ export const profile = async (id: string) => {
         const user = await prisma.user.findUnique({
             where: { id },
             select: {
-                roles: true,
+                roles: {
+                    select: {
+                        role: {
+                            select: {
+                                roleName: true
+                            }
+                        }
+                    }
+                },
                 username: true,
                 email: true,
                 id: true,
