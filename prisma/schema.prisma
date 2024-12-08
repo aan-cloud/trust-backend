@@ -81,6 +81,7 @@ model Product {
   description String
   price       Int
   stock       Int
+  publish Boolean
 
   cartItems CartItem[]
   imageUrl Image[]
