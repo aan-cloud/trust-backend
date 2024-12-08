@@ -175,11 +175,11 @@ authRoute.openapi(
         },
     },
     async (c: Context) => {
-        const refreshToken = await c.req.json();
+        const { refreshToken } = await c.req.json();
 
         try {
             const newToken = await authServices.regenToken(
-                refreshToken.refreshToken
+                refreshToken
             );
 
             return c.json(newToken, 201);
@@ -217,7 +217,7 @@ authRoute.openapi(
         },
     },
     async (c: Context) => {
-        const refreshToken = await c.req.json();
+        const { refreshToken } = await c.req.json();
 
         try {
             const logedOut = await authServices.logOut(refreshToken);
@@ -311,7 +311,6 @@ authRoute.openapi(
     },
     async (c: Context) => {
        const query = c.req.query('code');
-       console.log(query);
 
        if (!query) {
         throw new Error("Failed to get User information or Google code is invalid")

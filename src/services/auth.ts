@@ -22,7 +22,7 @@ const processToken = async (
     isGenerated: boolean = false
 ) => {
     const isTokenExist = await prisma.userToken.findFirst({
-        where: { token: refreshToken, expiresAt: { gte: new Date() } },
+        where: { token: { equals: refreshToken }, expiresAt: { gte: new Date() } },
     });
 
     if (!isTokenExist) {
