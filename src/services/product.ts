@@ -8,5 +8,3 @@
 // const getAllProducts = async () => {
     
 // }
-
-// Create Soon
