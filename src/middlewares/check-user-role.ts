@@ -8,8 +8,7 @@ const hasRole = (userRoles: string[], requiredRole: string) => {
     return userRoles.includes(requiredRole);
 };
 
-export const checkUserRole = () => {
-    return createMiddleware(async (c: Context, next) => {
+export const checkUserRole = createMiddleware(async (c: Context, next) => {
         const token = extractToken(c.req.header("Authorization"));
 
         if (!token) {
@@ -74,4 +73,3 @@ export const checkUserRole = () => {
             );
         }
     });
-};
