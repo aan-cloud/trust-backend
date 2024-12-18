@@ -142,7 +142,10 @@ authRoute.openapi(
             const user = await authServices.profile(userId);
             return c.json({ message: "succes get profile", user }, 200);
         } catch (error: Error | any) {
-            return c.json({ message: "failed to get profile", error: error.message}, 401);
+            return c.json(
+                { message: "failed to get profile", error: error.message },
+                401
+            );
         }
     }
 );
@@ -178,9 +181,7 @@ authRoute.openapi(
         const { refreshToken } = await c.req.json();
 
         try {
-            const newToken = await authServices.regenToken(
-                refreshToken
-            );
+            const newToken = await authServices.regenToken(refreshToken);
 
             return c.json(newToken, 201);
         } catch (error: Error | any) {
@@ -288,7 +289,7 @@ authRoute.openapi(
         },
     },
     async (c: Context) => {
-       return c.redirect(authorizationUrl);
+        return c.redirect(authorizationUrl);
     }
 );
 
@@ -310,23 +311,25 @@ authRoute.openapi(
         },
     },
     async (c: Context) => {
-       const query = c.req.query('code');
+        const query = c.req.query("code");
 
-       if (!query) {
-        throw new Error("Failed to get User information or Google code is invalid")
-       }
-
-       try {
-        const userData = await authServices.googleAuthCallback(query);
-
-        if (!userData) {
-            c.json({ messsage: userData}, 401);
+        if (!query) {
+            throw new Error(
+                "Failed to get User information or Google code is invalid"
+            );
         }
 
-        return c.json(userData);
-       } catch (error: Error | any) {
-        return c.json({ error: error.message }, error.status || 404);
-       }
+        try {
+            const userData = await authServices.googleAuthCallback(query);
+
+            if (!userData) {
+                c.json({ messsage: userData }, 401);
+            }
+
+            return c.json(userData);
+        } catch (error: Error | any) {
+            return c.json({ error: error.message }, error.status || 404);
+        }
     }
 );
 

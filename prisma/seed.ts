@@ -15,7 +15,7 @@ async function main() {
     }
 
     for (const product of dataProducts) {
-        const {...productWithoutCategory } = product;
+        const { ...productWithoutCategory } = product;
 
         const productData = {
             ...productWithoutCategory,

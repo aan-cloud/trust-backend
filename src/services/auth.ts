@@ -4,25 +4,28 @@ import {
     loginSchema,
     registerSchema,
     changePasswordSchema,
-    sellerRegisterSchema
+    sellerRegisterSchema,
 } from "../schemas/auth.schema";
 import { z } from "zod";
 import * as crypto from "../libs/crypto";
 import * as jwt from "../libs/jwt";
 import { google } from "googleapis";
-import { oauth2Client } from "../libs/oauth"
+import { oauth2Client } from "../libs/oauth";
 
 type RegisterSchema = z.infer<typeof registerSchema>;
 type LoginSchema = z.infer<typeof loginSchema>;
 type ChangePasswordSchema = z.infer<typeof changePasswordSchema>;
-type SellerRegisterSchema = z.infer<typeof sellerRegisterSchema>
+type SellerRegisterSchema = z.infer<typeof sellerRegisterSchema>;
 
 const processToken = async (
     refreshToken: string,
     isGenerated: boolean = false
 ) => {
     const isTokenExist = await prisma.userToken.findFirst({
-        where: { token: { equals: refreshToken }, expiresAt: { gte: new Date() } },
+        where: {
+            token: { equals: refreshToken },
+            expiresAt: { gte: new Date() },
+        },
     });
 
     if (!isTokenExist) {
@@ -98,9 +101,9 @@ export const register = async (userData: RegisterSchema) => {
                 email: true,
                 roles: {
                     select: {
-                        roleId: true
-                    }
-                }
+                        roleId: true,
+                    },
+                },
             },
         });
     });
@@ -163,10 +166,10 @@ export const profile = async (id: string) => {
                     select: {
                         role: {
                             select: {
-                                roleName: true
-                            }
-                        }
-                    }
+                                roleName: true,
+                            },
+                        },
+                    },
                 },
                 username: true,
                 email: true,
@@ -220,93 +223,93 @@ export const logOut = async (refreshToken: string) => {
 };
 
 export const googleAuthCallback = async (code: string) => {
-        const { tokens } = await oauth2Client.getToken(code);
+    const { tokens } = await oauth2Client.getToken(code);
 
-        oauth2Client.setCredentials(tokens);
+    oauth2Client.setCredentials(tokens);
 
-        const oauth2 = google.oauth2({
-            auth: oauth2Client,
-            version: 'v2'
+    const oauth2 = google.oauth2({
+        auth: oauth2Client,
+        version: "v2",
+    });
+
+    const { data } = await oauth2.userinfo.get();
+
+    if (!data.email || !data.name || !data.id) {
+        throw new Error("Failed get google user data");
+    }
+
+    let existingUser = await prisma.user.findUnique({
+        where: {
+            email: data.email,
+        },
+    });
+
+    const role = await prisma.role.findFirst({
+        where: {
+            roleName: "USER",
+        },
+    });
+
+    if (!existingUser) {
+        existingUser = await prisma.user.create({
+            data: {
+                email: data.email,
+                username: data.name,
+                password: data.id,
+                roles: {
+                    create: {
+                        role: {
+                            connect: {
+                                id: role?.id,
+                            },
+                        },
+                    },
+                },
+            },
         });
-
-        const { data } = await oauth2.userinfo.get();
-
-        if(!data.email || !data.name || !data.id) {
-            throw new Error("Failed get google user data");
-        }
-
-        let existingUser = await prisma.user.findUnique({
-            where: {
-                email: data.email
-            }
-        });
-
-        const role = await prisma.role.findFirst({
-            where: {
-                roleName: "USER"
-            }
-        });
-
-        if (!existingUser) {
-            existingUser = await prisma.user.create({
-                data: {
-                    email: data.email,
-                    username: data.name,
-                    password: data.id,
-                    roles: {
-                        create: {
-                            role: {
-                                connect: {
-                                    id: role?.id
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-            const [accessToken, refreshToken] = await Promise.all([
-                jwt.createAccesToken(existingUser.id),
-                jwt.createRefreshToken(existingUser.id),
-            ]);
-    
-            return {
-                email: existingUser.email,
-                userName: existingUser.username,
-                accessToken,
-                refreshToken
-            };
-        };
+        const [accessToken, refreshToken] = await Promise.all([
+            jwt.createAccesToken(existingUser.id),
+            jwt.createRefreshToken(existingUser.id),
+        ]);
 
         return {
-            message: "User Already"
-        }
+            email: existingUser.email,
+            userName: existingUser.username,
+            accessToken,
+            refreshToken,
+        };
+    }
+
+    return {
+        message: "User Already",
+    };
 };
 
 export const registerSeller = async (userData: SellerRegisterSchema) => {
     return await prisma.$transaction(async (db) => {
         const checkUser = await db.user.findFirst({
             where: {
-                id: userData.userId
-            }
+                id: userData.userId,
+            },
         });
-    
-        if(!checkUser) {
-            throw new Error("User not found!")
+
+        if (!checkUser) {
+            throw new Error("User not found!");
         }
-    
+
         let role = await db.role.findFirst({
-            where: { roleName: userData.switchToRole}
+            where: { roleName: userData.switchToRole },
         });
-    
+
         if (!role) {
             role = await db.role.create({
                 data: {
                     roleName: userData.switchToRole,
                     description: userData.description,
-                }
+                },
             });
         }
-    
+
         await db.userRole.upsert({
             where: {
                 userId_roleId: {
@@ -322,12 +325,12 @@ export const registerSeller = async (userData: SellerRegisterSchema) => {
                 roleId: role.id,
             },
         });
-    
+
         const updatedUser = await db.user.update({
             where: { id: userData.userId },
             data: {
                 avatarUrl: userData.avatarUrl,
-                description: userData.description
+                description: userData.description,
             },
             select: {
                 id: true,
@@ -336,13 +339,13 @@ export const registerSeller = async (userData: SellerRegisterSchema) => {
                 description: true,
                 avatarUrl: true,
                 createdAt: true,
-                updatedAt: true
-            }
+                updatedAt: true,
+            },
         });
-    
+
         return {
             message: "Switched to seller was successfully",
-            updatedUser
+            updatedUser,
         };
     });
-}
+};

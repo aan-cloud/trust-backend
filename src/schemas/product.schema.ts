@@ -1,6 +1,6 @@
-import { z } from "zod";
+import { z } from '@hono/zod-openapi'
 
-const productSchema = z.object({
+const ProductSchema = z.object({
     id: z.string().min(4).optional(),
     name: z.string(),
     slug: z.string(),
@@ -13,4 +13,21 @@ const productSchema = z.object({
     category: z.string(),
 });
 
-export default productSchema;
+export const querySchema = z.object({
+    filter: z.string().openapi({
+        param: {
+            name: "filter",
+            in: "query"
+        },
+        example: "{slug: tire}"
+    }).optional(),
+    sort: z.string().openapi({
+        param: {
+            name: "sort",
+            in: 'query'
+        },
+        example: "desc"
+    }).optional()
+});
+
+export default ProductSchema;

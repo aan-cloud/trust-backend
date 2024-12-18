@@ -3,6 +3,7 @@ import { apiReference } from "@scalar/hono-api-reference";
 import { cors } from "hono/cors";
 import WelcomePage from "./Welcome";
 import authRoute from "./routes/auth.js";
+import productRoute from "./routes/product";
 // import cartRoute from "./routes/cart.route"
 import { OpenAPIHono } from "@hono/zod-openapi";
 
@@ -54,7 +55,7 @@ app.doc("/openapi.json", {
 });
 
 // API route
-// app.route("/products", productRoutes);
+app.route("/products", productRoute);
 // app.route("/categories", categoriesRoute);
 // app.route("/users", userRoute);
 app.route("/auth", authRoute);

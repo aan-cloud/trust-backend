@@ -92,5 +92,5 @@ export const sellerRegisterSchema = z.object({
     userId: z.string(),
     switchToRole: z.string(),
     description: z.string().max(300),
-    avatarUrl: z.string()
+    avatarUrl: z.string(),
 });

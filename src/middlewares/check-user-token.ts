@@ -32,7 +32,11 @@ const authMiddleware = createMiddleware(async (c: Context, next) => {
 
         await next();
     } catch (error: Error | any) {
-        return respondWithError(c, `Authentication failed ${error.message}`, 401);
+        return respondWithError(
+            c,
+            `Authentication failed ${error.message}`,
+            401
+        );
     }
 });
 
@@ -40,7 +44,11 @@ export const extractToken = (authHeader: string | undefined): string | null => {
     return authHeader ? authHeader.split(" ")[1] : null;
 };
 
-export const respondWithError = (c: Context, message: string, status: number) => {
+export const respondWithError = (
+    c: Context,
+    message: string,
+    status: number
+) => {
     return c.json({ message }, { status });
 };
 

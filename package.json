@@ -3,11 +3,11 @@
     "scripts": {
         "dev": "bun run --hot src/index.tsx",
         "start": "bun run src/index.tsx",
-        "generate": "prisma generate",
-        "db:migrate:dev": "prisma migrate dev",
-        "db:migrate:deploy": "prisma migrate deploy",
-        "db:studio": "prisma studio",
-        "db:seed": "prisma db seed",
+        "generate": "bunx prisma generate",
+        "db:migrate:dev": "bunx prisma migrate dev",
+        "db:migrate:deploy": "bunx prisma migrate deploy",
+        "db:studio": "bunx prisma studio",
+        "db:seed": "bunx prisma db seed",
         "lint": "bunx eslint .",
         "formatter": "bunx prettier --write ."
     },
