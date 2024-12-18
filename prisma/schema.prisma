@@ -16,7 +16,7 @@ datasource db {
 model User {
   id String @id @default(uuid())
 
-  username String @unique
+  userName String @unique
   email    String @unique
 
   password String
@@ -81,7 +81,7 @@ model Product {
   description String
   price       Int
   stock       Int
-  publish Boolean
+  publish     Boolean
 
   cartItems CartItem[]
   imageUrl Image[]
@@ -204,6 +204,7 @@ model Comment {
 
 model RatingItem {
   id String @id @default(uuid())
+  rate Int @db.Integer
 
   productId String
   product Product @relation(fields: [productId], references: [id])
