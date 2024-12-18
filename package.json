@@ -7,7 +7,7 @@
         "db:migrate:dev": "bunx prisma migrate dev",
         "db:migrate:deploy": "bunx prisma migrate deploy",
         "db:studio": "bunx prisma studio",
-        "db:seed": "bunx prisma db seed",
+        "db:seed": "prisma db seed",
         "lint": "bunx eslint .",
         "formatter": "bunx prettier --write ."
     },
