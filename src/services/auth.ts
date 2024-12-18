@@ -54,7 +54,7 @@ export const register = async (userData: RegisterSchema) => {
             where: {
                 OR: [
                     {
-                        username: userData.username,
+                        userName: userData.username,
                     },
                     {
                         email: userData.email,
@@ -86,7 +86,7 @@ export const register = async (userData: RegisterSchema) => {
 
         return await db.user.create({
             data: {
-                username: userData.username,
+                userName: userData.username,
                 password: hashedPassword,
                 email: userData.email,
                 roles: {
@@ -97,7 +97,7 @@ export const register = async (userData: RegisterSchema) => {
             },
             select: {
                 id: true,
-                username: true,
+                userName: true,
                 email: true,
                 roles: {
                     select: {
@@ -112,12 +112,12 @@ export const register = async (userData: RegisterSchema) => {
 export const login = async (userData: LoginSchema) => {
     const existingUser = await prisma.user.findUnique({
         where: {
-            username: userData.username,
+            userName: userData.username,
         },
         select: {
             id: true,
             password: true,
-            username: true,
+            userName: true,
             roles: {
                 select: {
                     role: {
@@ -147,7 +147,7 @@ export const login = async (userData: LoginSchema) => {
     ]);
 
     return {
-        username: existingUser.username,
+        username: existingUser.userName,
         accesToken: accessToken,
         refreshToken: refreshToken,
         roles: existingUser.roles,
@@ -171,7 +171,7 @@ export const profile = async (id: string) => {
                         },
                     },
                 },
-                username: true,
+                userName: true,
                 email: true,
                 id: true,
             },
@@ -190,7 +190,7 @@ export const regenToken = async (refreshToken: string): Promise<any> => {
 export const changePassword = async (userData: ChangePasswordSchema) => {
     const user = await prisma.user.findUnique({
         where: {
-            username: userData.userName,
+            userName: userData.userName,
             email: userData.email,
         },
     });
@@ -208,7 +208,7 @@ export const changePassword = async (userData: ChangePasswordSchema) => {
             password: newPassword,
         },
         where: {
-            username: userData.userName,
+            userName: userData.userName,
             email: userData.email,
         },
     });
@@ -254,7 +254,7 @@ export const googleAuthCallback = async (code: string) => {
         existingUser = await prisma.user.create({
             data: {
                 email: data.email,
-                username: data.name,
+                userName: data.name,
                 password: data.id,
                 roles: {
                     create: {
@@ -274,7 +274,7 @@ export const googleAuthCallback = async (code: string) => {
 
         return {
             email: existingUser.email,
-            userName: existingUser.username,
+            userName: existingUser.userName,
             accessToken,
             refreshToken,
         };
@@ -334,7 +334,7 @@ export const registerSeller = async (userData: SellerRegisterSchema) => {
             },
             select: {
                 id: true,
-                username: true,
+                userName: true,
                 email: true,
                 description: true,
                 avatarUrl: true,
