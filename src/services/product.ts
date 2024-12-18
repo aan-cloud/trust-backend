@@ -60,7 +60,7 @@ export const createProduct = async (dataProduct: Product, id: string) => {
         throw new Error("Access data danied, Please login or register first");
     }
 
-    const parseSlug = slugify(dataProduct.slug);
+    const parseSlug = slugify(dataProduct.name);
 
     const generateData = await prisma.product.create({
         data: {
