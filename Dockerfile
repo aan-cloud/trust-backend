@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Install dependencies
-RUN bun install --frozen-lockfile
+RUN bun install
 
 # Generate Prisma
 RUN bun run generate
