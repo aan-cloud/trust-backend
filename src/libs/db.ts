@@ -15,6 +15,9 @@ export const redis = new Redis({
     host: redisUrl.host,
     port: Number(redisUrl.port),
     maxRetriesPerRequest: 50,
+    tls: {
+        rejectUnauthorized: false,
+    },
 });
 
 redis.ping()
