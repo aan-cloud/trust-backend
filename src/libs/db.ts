@@ -7,18 +7,18 @@ const redisUrl = {
     password: process.env.REDIS_PASSWORD as string,
     host: process.env.REDIS_HOST as string,
     port: process.env.REDIS_PORT,
+    url: process.env.REDIS_URL as string
 };
 
-export const redis = new Redis({
-    username: redisUrl.username,
-    password: redisUrl.password,
-    host: redisUrl.host,
-    port: Number(redisUrl.port),
-    maxRetriesPerRequest: 50,
-    tls: {
-        rejectUnauthorized: false,
-    },
-});
+// {
+//     username: redisUrl.username,
+//     password: redisUrl.password,
+//     host: redisUrl.host,
+//     port: Number(redisUrl.port),
+//     maxRetriesPerRequest: 50,
+// }
+
+export const redis = new Redis(redisUrl.url);
 
 redis.ping()
     .then((res) => {
