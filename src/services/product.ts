@@ -6,7 +6,7 @@ import parseSorts from "../utils/sort";
 import slugify from "../utils/slugify";
 
 type Product = z.infer<typeof ProductSchema>;
-
+// Refactor, only publish product can display
 export const getAllProducts = async (filter?: string, sort?: string) => {
     const where = parseFilters(filter);
     const orderBy = parseSorts(sort);
@@ -99,3 +99,23 @@ export const deleteProduct = async (productId: string) => {
 
     return getProduct;
 };
+
+
+export const publishedProduct = async (productId: string) => {
+    const checkProduct = await prisma.product.findUnique({
+        where: { id: productId }
+    });
+
+    if (!checkProduct) {
+        throw new Error("Incorrect Product ID !!");
+    };
+
+    const publishProduct = await prisma.product.update({
+        data: {
+            publish: true
+        },
+        where: { id: productId }
+    });
+
+    return publishProduct;
+}
