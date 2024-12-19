@@ -34,10 +34,10 @@ productRoute.openapi(
         },
         responses: {
             201: {
-                description: "Register success",
+                description: "Get products success",
             },
             400: {
-                description: "Register failed",
+                description: "Get products failed",
             },
         },
     },
@@ -59,7 +59,7 @@ productRoute.openapi(
         path: "/{slug}",
         method: "get",
         tags: TAGS,
-        summary: "Place details",
+        summary: "Product details",
         description: "Get product details by slug",
         request: {
             params: productSchema.slugParam
@@ -75,10 +75,10 @@ productRoute.openapi(
         },
         responses: {
             201: {
-                description: "Register success",
+                description: "Get product success",
             },
             400: {
-                description: "Register failed",
+                description: "Get product failed",
             },
         },
     },
@@ -115,20 +115,18 @@ productRoute.openapi(
         },
         responses: {
             201: {
-                description: "Register success",
+                description: "Add product success",
             },
             400: {
-                description: "Register failed",
+                description: "Add product failed",
             },
         },
     },
     async (c) => {
         const reqBody = c.req.valid("json");
         const userId = (c as Context).get("user")?.id as string;
-        console.info(reqBody)
         try {
             const createdProduct = await productServices.createProduct(reqBody, userId);
-            console.log(createdProduct)
             return c.json(createdProduct, 201);
         } catch (error: Error | any) {
             return c.json(error, 400)
@@ -178,5 +176,48 @@ productRoute.openapi(
         }
     }
 );
+
+productRoute.openapi(
+    {
+        path: "/{productId}",
+        method: "patch",
+        tags: TAGS,
+        summary: "Publish Product",
+        description: "Publish Product by product id",
+        security: [{ AuthorizationBearer: [] }],
+        middleware: [authMiddleware, checkUserRole],
+        request: {
+            params: productSchema.productIdParam
+        },
+        body: {
+            request: {
+                "application/json": {
+                    content: {
+                        schema: productSchema.default,
+                    },
+                },
+            },
+        },
+        responses: {
+            201: {
+                description: "Product is Published",
+            },
+            404: {
+                description: "Publishing Product failed",
+            },
+        },
+    },
+    async (c) => {
+        const { productId } = c.req.valid("param");
+
+        try {
+            const productIsPublished = await productServices.publishedProduct(productId);
+
+            return c.json(productIsPublished, 201);
+        } catch (error: Error | any) {
+            return c.json(error, 404);
+        }
+    }
+)
 
 export default productRoute;
