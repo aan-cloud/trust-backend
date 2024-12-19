@@ -10,7 +10,7 @@ const redisUrl = {
     port: process.env.REDIS_PORT,
 };
 
-const client = createClient({
+export const redis = createClient({
     username: redisUrl.username,
     password: redisUrl.password,
     socket: {
@@ -19,9 +19,9 @@ const client = createClient({
     }
 });
 
-client.on('error', err => console.log('Redis Client Error', err));
+redis.on('error', err => console.log('Redis Client Error', err));
 
-client.connect();
+redis.connect();
 console.log("Connect to redis 😁");
 
 export default prisma;
