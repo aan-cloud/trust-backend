@@ -1,35 +1,27 @@
 import { PrismaClient } from "@prisma/client";
-import Redis from "ioredis";
+import { createClient } from 'redis';
 
 const prisma = new PrismaClient();
+
 const redisUrl = {
     username: process.env.REDIS_USER as string,
     password: process.env.REDIS_PASSWORD as string,
     host: process.env.REDIS_HOST as string,
     port: process.env.REDIS_PORT,
-    url: process.env.REDIS_URL as string
 };
 
-// {
-//     username: redisUrl.username,
-//     password: redisUrl.password,
-//     host: redisUrl.host,
-//     port: Number(redisUrl.port),
-//     maxRetriesPerRequest: 50,
-// }
-
-export const redis = new Redis(redisUrl.url);
-
-redis.ping()
-    .then((res) => {
-        console.log("Redis is connected:", res);
-    })
-    .catch((err) => {
-        console.error("Redis connection error:", err);
-    });
-
-redis.on('error', (error) => {  
-    console.error('Redis error:', error);  
+const client = createClient({
+    username: redisUrl.username,
+    password: redisUrl.password,
+    socket: {
+        host: redisUrl.host,
+        port: Number(redisUrl.port)
+    }
 });
+
+client.on('error', err => console.log('Redis Client Error', err));
+
+client.connect();
+console.log("Connect to redis 😁");
 
 export default prisma;
