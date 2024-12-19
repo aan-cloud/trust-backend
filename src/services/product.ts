@@ -48,6 +48,10 @@ export const getDetailProduct = async (slug: string) => {
         },
     });
 
+    if (!data) {
+        throw new Error("Product not found!!")
+    }
+
     return data;
 };
 
