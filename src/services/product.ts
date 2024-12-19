@@ -30,9 +30,9 @@ export const getAllProducts = async (filter?: string, sort?: string) => {
     return data;
 };
 
-export const getDetailProduct = async (slug: string) => {
-    const data = await prisma.product.findUnique({
-        where: { slug },
+export const getDetailProduct = async (slug: string, publish: boolean = true) => {
+    const data = await prisma.product.findFirst({
+        where: { slug, publish },
         select: {
             id: true,
             name: true,
