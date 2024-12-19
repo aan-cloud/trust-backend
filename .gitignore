@@ -28,3 +28,6 @@ lerna-debug.log*
 
 # misc
 .DS_Store
+
+#redis config
+redis.conf

@@ -1,7 +1,6 @@
 // import { Context } from "hono";
 // import { createMiddleware } from "hono/factory";
 
-
 // export const sellerRegister = () => {
 //     return createMiddleware(async (c: Context, next) => {
 //         // ambil req body

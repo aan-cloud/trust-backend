@@ -1,6 +1,6 @@
 # Trust API
 
-Trust API is part of the **Trust** software suite build base-on REST API, designed with a ** client-server architecture**. Trust API serves as the **main server**, built with high-performance technologies and leveraging built-in framework design patterns such as:
+Trust API is part of the **Trust** software suite build base-on REST API. Trust API serves as the **main server**, built with high-performance technologies and leveraging built-in framework design patterns such as:
 
 -   Middleware Pattern
 -   Routing Pattern
@@ -99,6 +99,13 @@ services:
             - path: .env
               required: true
         command: ["postgres", "-c", "log_statement=all"]
+    redis:
+        image: redis
+        container_name: redis
+        restart: always
+        ports:
+            - "6380:6379"
+        command: ["redis-server", "--requirepass", "my-top-secret"]
 #     volumes:
 #       - postgres-data:/var/lib/postgresql/data
 

@@ -1,12 +1,9 @@
 import { serve } from "bun";
 import { apiReference } from "@scalar/hono-api-reference";
 import { cors } from "hono/cors";
-import "./routes/products.route.ts";
 import WelcomePage from "./Welcome";
-import productRoutes from "./routes/products.route.ts";
-import categoriesRoute from "./routes/categories.route";
-import userRoute from "./routes/users.route";
-import authRoute from "./routes/auth.route";
+import authRoute from "./routes/auth.js";
+import productRoute from "./routes/product";
 // import cartRoute from "./routes/cart.route"
 import { OpenAPIHono } from "@hono/zod-openapi";
 
@@ -58,9 +55,9 @@ app.doc("/openapi.json", {
 });
 
 // API route
-app.route("/products", productRoutes);
-app.route("/categories", categoriesRoute);
-app.route("/users", userRoute);
+app.route("/products", productRoute);
+// app.route("/categories", categoriesRoute);
+// app.route("/users", userRoute);
 app.route("/auth", authRoute);
 // app.route("/cart", cartRoute)
 

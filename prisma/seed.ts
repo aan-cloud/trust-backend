@@ -1,29 +1,34 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import prisma from "../src/libs/db";
 
-import { dataCategories } from "./data/categories";
+import slugify from "../src/utils/slugify";
+
 import { dataProducts } from "./data/products";
 
-async function main() {
-    for (const category of dataCategories) {
-        const newCategoryResult = await prisma.category.upsert({
-            where: { slug: category.slug },
-            update: category,
-            create: category,
-        });
-        console.info(`🆕 Category: ${newCategoryResult.name}`);
-    }
+async function main(userName: string) {
+
+    const user = await prisma.user.findUnique({
+        where: {
+            userName
+        }
+    });
+
+    console.info(user?.userName)
+
+    if (!user) {
+        throw new Error("User seeder not has access!");
+    };
 
     for (const product of dataProducts) {
-        const {...productWithoutCategory } = product;
 
         const productData = {
-            ...productWithoutCategory,
-            category: { connect: { slug: product.category } },
+            slug: slugify(product.name),
+            publish: false,
+            userId: user.id,
+            ...product
         };
 
         const newProductResult = await prisma.product.upsert({
-            where: { slug: product.slug },
+            where: { name: product.name },
             update: productData,
             create: productData,
         });
@@ -32,7 +37,7 @@ async function main() {
     }
 }
 
-main()
+main(process.env.USER_ADMIN as string)
     .then(async () => {
         await prisma.$disconnect();
     })
