@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
-    "username" TEXT NOT NULL,
+    "userName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "description" VARCHAR(400),
@@ -134,6 +134,7 @@ CREATE TABLE "comments" (
 -- CreateTable
 CREATE TABLE "rating_items" (
     "id" TEXT NOT NULL,
+    "rate" INTEGER NOT NULL,
     "productId" TEXT NOT NULL,
     "ratingId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -153,7 +154,7 @@ CREATE TABLE "ratings" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
+CREATE UNIQUE INDEX "users_userName_key" ON "users"("userName");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
