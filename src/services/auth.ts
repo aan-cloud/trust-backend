@@ -179,7 +179,7 @@ export const profile = async (id: string) => {
         await redis.setex(id, 3600, JSON.stringify(user));
         return user;
     }
-
+    
     return JSON.parse(isUserCached);
 };
 
