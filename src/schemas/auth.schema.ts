@@ -67,7 +67,6 @@ export const registerSchema = z.object({
             /^[a-zA-Z0-9_]+$/,
             "Username can only contain alphanumeric characters or underscores"
         )
-        .transform((value) => value.toLowerCase())
         .openapi({
             description: "The username of the user.",
             example: "user123",
