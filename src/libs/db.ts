@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { createClient } from 'redis';
+import Redis from "ioredis";
 
 const prisma = new PrismaClient();
 
@@ -10,18 +10,19 @@ const redisUrl = {
     port: process.env.REDIS_PORT,
 };
 
-export const redis = createClient({
+export const redis = new Redis({
     username: redisUrl.username,
     password: redisUrl.password,
-    socket: {
-        host: redisUrl.host,
-        port: Number(redisUrl.port)
-    }
+    host: redisUrl.host,
+    port: Number(redisUrl.port)
 });
 
-redis.on('error', err => console.log('Redis Client Error', err));
+redis.on('error', (err) => {
+    console.error('Redis Client Error:', err);
+});
 
-redis.connect();
-console.log("Connect to redis 😁");
+redis.on('connect', () => {
+    console.log("Connected to Redis 😁");
+});
 
 export default prisma;
