@@ -60,8 +60,8 @@ authRoute.openapi(
             },
         },
     },
-    async (c: Context) => {
-        const body = await c.req.json();
+    async (c) => {
+        const body = c.req.valid("json");
 
         try {
             const registeredUser = await authServices.register(body);
