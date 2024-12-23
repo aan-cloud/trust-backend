@@ -8,9 +8,6 @@ WORKDIR /usr/src/app
 # Copy app files
 COPY . .
 
-# Copy the .env file to make sure Docker can read environment variables
-COPY .env .env
-
 # Install dependencies
 RUN bun install --frozen-lockfile
 
