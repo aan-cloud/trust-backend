@@ -1,34 +1,21 @@
-# Stage 1: Builder
-FROM oven/bun:latest AS builder
+# Use the official Bun image with Debian Linux
+# Oven is the company name, the creator of Bun
+FROM oven/bun:debian
 
-WORKDIR /app
+# Create and change to the app directory
+WORKDIR /usr/src/app
 
-# Copy package.json dan install dependencies di builder stage
-COPY package.json ./ 
-RUN bun install --frozen-lockfile
-
-# Copy seluruh aplikasi
+# Copy app files
 COPY . .
 
-# Generate Prisma client (pastikan database sudah siap atau dilakukan di runtime)
-RUN bun run prisma generate
-
-# Stage 2: Runtime
-FROM oven/bun:latest
-
-WORKDIR /app
-
-# Salin dependencies dan aplikasi dari builder stage
-COPY --from=builder /app /app
-
-# Salin file .env ke dalam container dan set environment variables
+# Copy the .env file to make sure Docker can read environment variables
 COPY .env .env
 
-# Install dependencies hanya untuk produksi
-RUN bun install --production
+# Install dependencies
+RUN bun install --frozen-lockfile
 
-# Expose port untuk aplikasi
-EXPOSE 3000
+# Generate Prisma
+RUN bun generate
 
-# Start aplikasi
+# Run the application
 CMD ["bun", "start"]
