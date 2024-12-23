@@ -8,6 +8,9 @@ WORKDIR /usr/src/app
 # Copy app files
 COPY . .
 
+# Check if the .env file is copied correctly
+RUN ls -al /usr/src/app
+
 # Install dependencies
 RUN bun install --frozen-lockfile
 
