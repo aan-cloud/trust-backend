@@ -158,7 +158,9 @@ export const profile = async (id: string) => {
     // Inline caching tecnique
     const isUserCached = await redis.get(id);
 
-    if (!isUserCached) {
+    const parsedUserData = JSON.parse(isUserCached as string);
+
+    if (!isUserCached || parsedUserData.roles[0].role.roleName !== "SELLER") {
         const user = await prisma.user.findUnique({
             where: { id },
             select: {
@@ -180,7 +182,7 @@ export const profile = async (id: string) => {
         return user;
     }
     
-    return JSON.parse(isUserCached);
+    return parsedUserData;
 };
 
 export const regenToken = async (refreshToken: string): Promise<any> => {
@@ -291,6 +293,17 @@ export const registerSeller = async (userData: SellerRegisterSchema) => {
             where: {
                 id: userData.userId,
             },
+            include: {
+                roles: {
+                    include: {
+                        role: {
+                            select: {
+                                id: true
+                            }
+                        }
+                    }
+                }
+            }
         });
 
         if (!checkUser) {
@@ -309,6 +322,20 @@ export const registerSeller = async (userData: SellerRegisterSchema) => {
                 },
             });
         }
+
+        const previousRoleId = checkUser.roles.length > 0 ? checkUser.roles[0].role.id : null;
+
+        if (previousRoleId) {
+            // Delete older role
+            await db.userRole.delete({
+                where: {
+                    userId_roleId: {
+                        userId: userData.userId,
+                        roleId: previousRoleId,
+                    },
+                },
+            });
+        };
 
         await db.userRole.upsert({
             where: {
