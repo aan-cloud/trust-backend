@@ -364,8 +364,6 @@ authRoute.openapi(
 
         body.userId = c.get("user").id;
 
-        console.log(body);
-
         try {
             const switchedRole = await authServices.registerSeller(body);
             return c.json(switchedRole, 201);
