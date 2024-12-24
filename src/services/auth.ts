@@ -307,8 +307,8 @@ export const registerSeller = async (userData: SellerRegisterSchema) => {
             }
         });
 
-        if (!checkUser) {
-            throw new Error("User not found!");
+        if (!checkUser || checkUser.roles.find((role) => role.role.roleName === "SELLER")) {
+            throw new Error("User not found!, or allready has been seller");
         }
 
         let role = await db.role.findFirst({
