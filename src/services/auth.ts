@@ -298,6 +298,7 @@ export const registerSeller = async (userData: SellerRegisterSchema) => {
                     include: {
                         role: {
                             select: {
+                                roleName: true,
                                 id: true
                             }
                         }
