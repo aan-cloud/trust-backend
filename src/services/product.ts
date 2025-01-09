@@ -44,7 +44,6 @@ export const getDetailProduct = async (slug: string, publish: boolean = true) =>
             createdAt: true,
             updatedAt: true,
             userId: true,
-            cartItems: true,
         },
     });
 
