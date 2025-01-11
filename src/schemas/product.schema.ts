@@ -22,6 +22,9 @@ const ProductSchema = z.object({
     stock: z.number().openapi({
         example: 10
     }),
+    category: z.string().openapi({
+        example: ""
+    }),
     createdAt: z.date().openapi({
         example: ""
     }).optional(),

@@ -91,6 +91,8 @@ model Product {
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
+  categoryId String
+  category Category @relation(fields: [categoryId], references: [id])
 
   createdAt DateTime  @default(now())
   updatedAt DateTime?
@@ -99,10 +101,19 @@ model Product {
   @@map("products")
 }
 
+model Category {
+  id String @id @default(uuid())
+  name String @unique
+
+  products Product[]
+
+  @@map("categories")
+}
+
 model Image {
   id String @id @default(uuid())
 
-  imageUrl String @db.VarChar(200)
+  imageUrl String @db.VarChar(200) @unique
 
   productId String
   product Product @relation(fields: [productId], references: [id])

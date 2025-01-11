@@ -22,6 +22,9 @@ export const getAllProducts = async (filter?: string, sort?: string) => {
             price: true,
             slug: true,
             stock: true,
+            category: {
+                select: { name: true }
+            },
             createdAt: true,
             updatedAt: true,
         },
@@ -55,22 +58,31 @@ export const getDetailProduct = async (slug: string, publish: boolean = true) =>
 };
 
 export const createProduct = async (dataProduct: Product, id: string) => {
-    const userId = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
         where: { id },
     });
 
-    if (!userId) {
+    if (!user) {
         throw new Error("Access data danied, Please login or register first");
+    }
+
+    const category = await prisma.category.findUnique({
+        where: { name: dataProduct.category }
+    });
+
+    if (!category) {
+        throw new Error("Category must be added")
     }
 
     const parseSlug = slugify(dataProduct.name);
 
-    const generateData = await prisma.product.create({
+    const generateProductData = await prisma.product.create({
         data: {
             name: dataProduct.name,
             slug: parseSlug,
             description: dataProduct.description,
             price: dataProduct.price,
+            categoryId: category.id,
             stock: dataProduct.stock,
             imageUrl: {
                 create: {
@@ -78,11 +90,11 @@ export const createProduct = async (dataProduct: Product, id: string) => {
                 },
             },
             publish: false,
-            userId: userId.id,
+            userId: user.id,
         },
     });
 
-    return generateData;
+    return generateProductData;
 };
 
 export const deleteProduct = async (productId: string) => {
