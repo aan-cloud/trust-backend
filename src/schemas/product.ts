@@ -49,6 +49,9 @@ export const createProductSchema = z.object({
     stock: z.number().openapi({
         example: 10
     }),
+    category: z.string().openapi({
+        example: "tire"
+    })
 });
 
 export const querySchema = z.object({
@@ -87,5 +90,15 @@ export const productIdParam = z.object({
         example: "product id"
     })
 });
+
+export const cartIdParam = z.object({
+    itemId: z.string().openapi({
+        param: {
+            name: "cartItemId",
+            in: "path"
+        },
+        example: "123"
+    })
+})
 
 export default ProductSchema;
