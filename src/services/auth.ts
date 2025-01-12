@@ -5,7 +5,7 @@ import {
     registerSchema,
     changePasswordSchema,
     sellerRegisterSchema,
-} from "../schemas/auth.schema";
+} from "../schemas/auth";
 import { z } from "zod";
 import * as crypto from "../libs/crypto";
 import * as jwt from "../libs/jwt";

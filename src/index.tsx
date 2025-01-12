@@ -4,7 +4,7 @@ import { cors } from "hono/cors";
 import WelcomePage from "./Welcome";
 import authRoute from "./routes/auth.js";
 import productRoute from "./routes/product";
-// import cartRoute from "./routes/cart.route"
+import cartRoute from "./routes/cart";
 import { OpenAPIHono } from "@hono/zod-openapi";
 
 const app = new OpenAPIHono();
@@ -59,7 +59,7 @@ app.route("/products", productRoute);
 // app.route("/categories", categoriesRoute);
 // app.route("/users", userRoute);
 app.route("/auth", authRoute);
-// app.route("/cart", cartRoute)
+app.route("/cart", cartRoute)
 
 const port = process.env.PORT || 3000;
 console.log(`Server is running on port ${port}`);

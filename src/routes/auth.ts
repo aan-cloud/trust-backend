@@ -1,7 +1,7 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { Context } from "hono";
 import * as authServices from "../services/auth";
-import * as authSchema from "../schemas/auth.schema";
+import * as authSchema from "../schemas/auth";
 import authMiddleware from "../middlewares/check-user-token";
 import { authorizationUrl } from "../libs/oauth";
 

@@ -1,6 +1,6 @@
 import prisma from "../libs/db";
 import { z } from "zod";
-import ProductSchema from "../schemas/product.schema";
+import ProductSchema from "../schemas/product";
 import parseFilters from "../utils/filter";
 import parseSorts from "../utils/sort";
 import slugify from "../utils/slugify";
@@ -22,6 +22,9 @@ export const getAllProducts = async (filter?: string, sort?: string) => {
             price: true,
             slug: true,
             stock: true,
+            ratings: {
+                select: { rate: true }
+            },
             category: {
                 select: { name: true }
             },

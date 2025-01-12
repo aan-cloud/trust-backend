@@ -1,10 +1,7 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 
-// import authMiddleware from "../middlewares/check-user-token";
-// import { checkUserRole } from "../middlewares/check-user-role";
-
 import * as productServices from "../services/product";
-import * as productSchema from "../schemas/product.schema";
+import * as productSchema from "../schemas/product";
 import { checkUserRole } from "../middlewares/check-user-role";
 import authMiddleware from "../middlewares/check-user-token";
 
@@ -170,7 +167,7 @@ productRoute.openapi(
         try {
             const deleteProduct = await productServices.deleteProduct(productId);
 
-            return c.json({ ...deleteProduct, message: "Product deleted succuesfully" }, 204);
+            return c.json({ ...deleteProduct, message: "Product deleted succuesfully" }, 201);
         } catch (error: Error | any) {
             return c.json(error, 409);
         }
