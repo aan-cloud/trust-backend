@@ -32,10 +32,11 @@ const processToken = async (
         throw new Error("Token is Invalid or expired!");
     }
 
+    await prisma.userToken.delete({
+        where: { id: isTokenExist.id },
+    });
+
     if (isGenerated) {
-        await prisma.userToken.delete({
-            where: { id: isTokenExist.id },
-        });
         
         const [accessToken, refreshToken] = await Promise.all([
             jwt.createAccesToken(isTokenExist.userId),
