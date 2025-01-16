@@ -38,12 +38,12 @@ const processToken = async (
 
     if (isGenerated) {
         
-        const [accessToken, refreshToken] = await Promise.all([
+        const [accesToken, refreshToken] = await Promise.all([
             jwt.createAccesToken(isTokenExist.userId),
             jwt.createRefreshToken(isTokenExist.userId),
         ]);
 
-        return { accessToken, refreshToken };
+        return { accesToken, refreshToken };
     }
 
     return true;
