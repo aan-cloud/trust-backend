@@ -46,6 +46,15 @@ export const getDetailProduct = async (slug: string, publish: boolean = true) =>
             imageUrl: true,
             price: true,
             slug: true,
+            ratings: {
+                select: { rate: true }
+            },
+            category: {
+                select: { name: true }
+            },
+            user: {
+                select: { userName: true, roles: true, description: true}
+            },
             stock: true,
             createdAt: true,
             updatedAt: true,
