@@ -157,8 +157,6 @@ authRoute.openapi(
         summary: "Refresh access token",
         description: "Get the refresh token and access token",
         tags: TAGS,
-        security: [{ AuthorizationBearer: [] }],
-        middleware: [authMiddleware],
         request: {
             body: {
                 content: {
