@@ -68,7 +68,11 @@ export const getUserCart = async (userId: string) => {
         include: {
             items: {
                 include: {
-                    product: true
+                    product: {
+                        include: {
+                            imageUrl: true
+                        }
+                    }
                 }
             }
         }
