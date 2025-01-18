@@ -86,7 +86,7 @@ cartRoute.openapi(
 cartRoute.openapi(
     {
         path: "/{slug}",
-        method: "delete",
+        method: "post",
         tags: TAGS,
         summary: "Delete Product in cart",
         description: "Delete Product in cart using cart item",
