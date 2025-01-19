@@ -30,13 +30,39 @@ export const postToCart = async (productId: string, userId: string, sum: number)
         cartId = existingCart.id;
     }
 
-    // post product to cartItem
-    const productToCartItem = await prisma.cartItem.create({
+    // CHECK IF PRODUCT IS EXIST IN CART ITEM
+    const existingProductIncart = await prisma.cartItem.findFirst({
+        where: { productId }
+    });
+
+    if (!existingProductIncart) {
+        // post product to cartItem
+        const productToCartItem = await prisma.cartItem.create({
+            data: {
+                productId,
+                cartId,
+                quantity: sum
+            },
+            select: {
+                product: {
+                    select: { name: true }
+                },
+                quantity: true
+            }
+        });
+
+        return {
+            message: "Success add product to cart",
+            productName: productToCartItem.product.name,
+            quantity: productToCartItem.quantity
+        };
+    }
+
+    const updateProductQuantity = await prisma.cartItem.update({
         data: {
-            productId,
-            cartId,
-            quantity: sum
+            quantity: sum + existingProductIncart.quantity
         },
+        where: { id: existingProductIncart.id },
         select: {
             product: {
                 select: { name: true }
@@ -47,9 +73,10 @@ export const postToCart = async (productId: string, userId: string, sum: number)
 
     return {
         message: "Success add product to cart",
-        productName: productToCartItem.product.name,
-        quantity: productToCartItem.quantity
+        productName: updateProductQuantity.product.name,
+        quantity: updateProductQuantity.quantity
     };
+ 
 };
 
 export const getUserCart = async (userId: string) => {
@@ -78,7 +105,13 @@ export const getUserCart = async (userId: string) => {
         }
     });
 
-    return cart;
+    // get total price in cart
+    const totalPrice = cart?.items.reduce((totalItem, currentItem) => totalItem + (currentItem.product.price * currentItem.quantity), 0);
+
+    return {
+        totalPrice,
+        ...cart
+    };
 };
 
 
