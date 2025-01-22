@@ -29,6 +29,7 @@
         "oslo": "^1.2.1",
         "prisma": "^6.2.1",
         "redis": "^4.7.0",
+        "stripe": "^17.5.0",
         "swagger-jsdoc": "^6.2.8",
         "swagger-ui-express": "^5.0.1",
         "z": "^1.0.9",

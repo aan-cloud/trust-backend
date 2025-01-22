@@ -18,18 +18,16 @@ model User {
 
   userName String @unique
   email    String @unique
-
   password String
-
   description String? @db.VarChar(400)
   avatarUrl String?
+  addressLine String?
 
   carts  Cart[]
   wishList WishList[]
   roles  UserRole[]  @relation("UserRoles")
   tokens UserToken[] @relation("UserTokens")
   products Product[]
-  comments Comment[]
   productRates Rating[]
 
   createdAt DateTime @default(now())
@@ -86,8 +84,7 @@ model Product {
   cartItems CartItem[]
   imageUrl Image[]
   wishListItems WishListItem[]
-  comments CommentItem[]
-  ratings RatingItem[]
+  ratings Rating[]
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
@@ -183,64 +180,23 @@ model WishList {
   @@map("wish_lists")
 }
 
-model CommentItem {
-  id String @id @default(uuid())
-  content String @db.VarChar(1000)
-
-  productId String
-  product Product @relation(fields: [productId], references: [id])
-
-  commentId String
-  comment Comment @relation(fields: [commentId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("comment_items")
-}
-
-model Comment {
-  id String @id @default(uuid())
-
-  userId String
-  user User @relation(fields: [userId], references: [id])
-
-  commentItems CommentItem[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("comments")
-}
-
-model RatingItem {
-  id String @id @default(uuid())
-  rate Int @db.Integer
-
-  productId String
-  product Product @relation(fields: [productId], references: [id])
-
-  ratingId String
-  rating Rating @relation(fields: [ratingId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("rating_items")
-}
-
 model Rating {
   id String @id @default(uuid())
+  rate Int @db.Integer
+  comment String @db.VarChar(1000)
+
+  productId String
+  product Product @relation(fields: [productId], references: [id])
 
   userId String
   user User @relation(fields: [userId], references: [id])
-
-  ratingItems RatingItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("ratings")
 }
+
+
 
 // Soon => Order, Message.
