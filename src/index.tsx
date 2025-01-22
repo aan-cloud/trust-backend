@@ -5,6 +5,7 @@ import WelcomePage from "./Welcome";
 import authRoute from "./routes/auth.js";
 import productRoute from "./routes/product";
 import cartRoute from "./routes/cart";
+import checkoutRoute from "./routes/checkout";
 import { OpenAPIHono } from "@hono/zod-openapi";
 
 const app = new OpenAPIHono();
@@ -58,6 +59,7 @@ app.doc("/openapi.json", {
 app.route("/products", productRoute);
 // app.route("/categories", categoriesRoute);
 // app.route("/users", userRoute);
+app.route("/checkout", checkoutRoute)
 app.route("/auth", authRoute);
 app.route("/cart", cartRoute)
 

@@ -9,27 +9,41 @@ export const createCheckoutSession = async (userId: string) => {
         include: {
             items: {
                 select: {
-                    product: true
+                    quantity: true,
+                    product: {
+                        include: {
+                            imageUrl: true,
+                        }
+                    }
                 }
             },
         }
     });
 
-    const session = await stripe.checkout.sessions.create({
-        line_items: [
-          {
-            price_data: {
-              currency: 'myr',
-              product_data: {
-                name: 'T-shirt',
-              },
-              unit_amount: 2000,
-            },
-            quantity: 1,
+    if (!productToCheckout) {
+        throw new Error("Products not found!")
+    }
+
+    const line_items = productToCheckout?.items.map((item) => ({
+        price_data: {
+          currency: 'myr',
+          product_data: {
+            name: item.product.name,
+            images: item.product.imageUrl.map(url => url.imageUrl),
           },
-        ],
+          unit_amount: Math.round(item.product.price * 100),
+        },
+        quantity: item.quantity,
+    }));
+
+    const session = await stripe.checkout.sessions.create({
+        line_items,
         mode: 'payment',
-        success_url: 'http://localhost:4242/success',
-        cancel_url: 'http://localhost:4242/cancel',
-      });
+        success_url: 'http://localhost:3000/success',
+        cancel_url: 'http://localhost:3000/cancel',
+    });
+
+    return {
+        sessionUrl: session.url
+    }
 }
