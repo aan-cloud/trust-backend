@@ -6,6 +6,7 @@ CREATE TABLE "users" (
     "password" TEXT NOT NULL,
     "description" VARCHAR(400),
     "avatarUrl" TEXT,
+    "addressLine" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -51,10 +52,19 @@ CREATE TABLE "products" (
     "stock" INTEGER NOT NULL,
     "publish" BOOLEAN NOT NULL,
     "userId" TEXT NOT NULL,
+    "categoryId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3),
 
     CONSTRAINT "products_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "categories" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+
+    CONSTRAINT "categories_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -110,42 +120,11 @@ CREATE TABLE "wish_lists" (
 );
 
 -- CreateTable
-CREATE TABLE "comment_items" (
-    "id" TEXT NOT NULL,
-    "content" VARCHAR(1000) NOT NULL,
-    "productId" TEXT NOT NULL,
-    "commentId" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "comment_items_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "comments" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "comments_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "rating_items" (
-    "id" TEXT NOT NULL,
-    "rate" INTEGER NOT NULL,
-    "productId" TEXT NOT NULL,
-    "ratingId" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "rating_items_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "ratings" (
     "id" TEXT NOT NULL,
+    "rate" INTEGER NOT NULL,
+    "comment" VARCHAR(1000) NOT NULL,
+    "productId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -175,6 +154,12 @@ CREATE UNIQUE INDEX "products_slug_key" ON "products"("slug");
 CREATE INDEX "products_slug_idx" ON "products"("slug");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "categories_name_key" ON "categories"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "images_imageUrl_key" ON "images"("imageUrl");
+
+-- CreateIndex
 CREATE INDEX "images_imageUrl_idx" ON "images"("imageUrl");
 
 -- CreateIndex
@@ -191,6 +176,9 @@ ALTER TABLE "user_tokens" ADD CONSTRAINT "user_tokens_userId_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "products" ADD CONSTRAINT "products_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "products" ADD CONSTRAINT "products_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "categories"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "images" ADD CONSTRAINT "images_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -214,19 +202,7 @@ ALTER TABLE "wish_list_items" ADD CONSTRAINT "wish_list_items_wishListId_fkey" F
 ALTER TABLE "wish_lists" ADD CONSTRAINT "wish_lists_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "comment_items" ADD CONSTRAINT "comment_items_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "comment_items" ADD CONSTRAINT "comment_items_commentId_fkey" FOREIGN KEY ("commentId") REFERENCES "comments"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "comments" ADD CONSTRAINT "comments_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "rating_items" ADD CONSTRAINT "rating_items_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "rating_items" ADD CONSTRAINT "rating_items_ratingId_fkey" FOREIGN KEY ("ratingId") REFERENCES "ratings"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ratings" ADD CONSTRAINT "ratings_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ratings" ADD CONSTRAINT "ratings_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
