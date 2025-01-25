@@ -155,7 +155,7 @@ export const login = async (userData: LoginSchema) => {
     ]);
 
     return {
-        username: existingUser.userName,
+        userName: existingUser.userName,
         accesToken: accessToken,
         refreshToken: refreshToken,
         roles: existingUser.roles,
