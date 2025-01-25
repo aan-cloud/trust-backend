@@ -26,6 +26,13 @@ const processToken = async (
             token: { equals: refreshToken },
             expiresAt: { gte: new Date() },
         },
+        include: {
+            user: {
+                select: {
+                    userName: true
+                }
+            }
+        }
     });
 
     if (!isTokenExist) {
@@ -43,7 +50,7 @@ const processToken = async (
             jwt.createRefreshToken(isTokenExist.userId),
         ]);
 
-        return { accesToken, refreshToken };
+        return { accesToken, refreshToken, userName: isTokenExist.user.userName };
     }
 
     return true;
