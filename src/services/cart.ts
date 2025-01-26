@@ -19,16 +19,11 @@ export const postToCart = async (productId: string, userId: string, sum: number)
         select: { id: true }
     });
 
-    let cartId;
     if (!existingCart) {
-        const newCart = await prisma.cart.create({
-            data: { userId },
-            select: { id: true }
-        });
-            cartId = newCart.id;
-    } else {
-        cartId = existingCart.id;
+        throw new Error("User cart is null")
     }
+
+    const cartId = existingCart.id;
 
     // CHECK IF PRODUCT IS EXIST IN CART ITEM
     const existingProductIncart = await prisma.cartItem.findFirst({

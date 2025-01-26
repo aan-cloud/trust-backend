@@ -92,7 +92,8 @@ export const register = async (userData: RegisterSchema) => {
 
         const hashedPassword = await crypto.hashValue(userData.password);
 
-        return await db.user.create({
+
+        const newUser =  await db.user.create({
             data: {
                 userName: userData.username,
                 password: hashedPassword,
@@ -112,8 +113,18 @@ export const register = async (userData: RegisterSchema) => {
                         roleId: true,
                     },
                 },
+                carts: true
             },
         });
+        // create new user cart
+        const newUserCart = await prisma.cart.create({
+            data: { userId: newUser.id }
+        });
+
+        return {
+            ...newUser,
+            cartId: newUserCart.id
+        }
     });
 };
 
@@ -153,6 +164,13 @@ export const login = async (userData: LoginSchema) => {
         jwt.createAccesToken(existingUser.id),
         jwt.createRefreshToken(existingUser.id),
     ]);
+
+    // save refreshToken to database
+    const currentDate = new Date();
+
+    await prisma.userToken.create({
+        data: { token: refreshToken, userId: existingUser.id, expiresAt: new Date(currentDate.setDate(currentDate.getDate() + 15)) },
+    })
 
     return {
         userName: existingUser.userName,
