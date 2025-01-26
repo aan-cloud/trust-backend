@@ -117,7 +117,7 @@ export const register = async (userData: RegisterSchema) => {
             },
         });
         // create new user cart
-        const newUserCart = await prisma.cart.create({
+        const newUserCart = await db.cart.create({
             data: { userId: newUser.id }
         });
 
