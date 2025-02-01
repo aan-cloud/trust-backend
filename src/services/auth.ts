@@ -201,6 +201,7 @@ export const profile = async (id: string) => {
                 },
                 userName: true,
                 email: true,
+                avatarUrl: true,
                 id: true,
             },
         });
