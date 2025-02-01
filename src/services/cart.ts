@@ -10,12 +10,11 @@ export const postToCart = async (productId: string, userId: string, sum: number)
         where: { id: productId }
     });
 
-    if(!user && !product) {
-        if (!user) { throw new Error("User not found") } else { throw new Error("Product not found") }
-    };
+    if (!user) throw new Error("User not found");
+    if (!product) throw new Error("Product not found");
 
     const existingCart = await prisma.cart.findFirst({
-        where: { userId },
+        where: { userId: user?.id },
         select: { id: true }
     });
 
@@ -26,8 +25,27 @@ export const postToCart = async (productId: string, userId: string, sum: number)
     const cartId = existingCart.id;
 
     // CHECK IF PRODUCT IS EXIST IN CART ITEM
-    const existingProductIncart = await prisma.cartItem.findFirst({
-        where: { productId }
+    const existingProductIncart = await prisma.cart.findFirst({
+        where: { 
+            id: cartId,
+            userId: user?.id,
+            items: {
+                some: {
+                    productId
+                }
+            }
+        },
+        select: {
+            items: {
+                select: {
+                    id: true,
+                    quantity: true,
+                    productId: true,
+                    cartId: true
+                }
+            },
+            userId: true
+        }
     });
 
     if (!existingProductIncart) {
@@ -55,9 +73,9 @@ export const postToCart = async (productId: string, userId: string, sum: number)
 
     const updateProductQuantity = await prisma.cartItem.update({
         data: {
-            quantity: sum + existingProductIncart.quantity
+            quantity: sum + existingProductIncart.items[0].quantity
         },
-        where: { id: existingProductIncart.id },
+        where: { id: existingProductIncart.items[0].id },
         select: {
             product: {
                 select: { name: true }
@@ -67,7 +85,7 @@ export const postToCart = async (productId: string, userId: string, sum: number)
     });
 
     return {
-        message: "Success add product to cart",
+        message: "Success update quantity product to cart",
         productName: updateProductQuantity.product.name,
         quantity: updateProductQuantity.quantity
     };
