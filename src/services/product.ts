@@ -70,43 +70,54 @@ export const getDetailProduct = async (slug: string, publish: boolean = true) =>
 };
 
 export const createProduct = async (dataProduct: Product, id: string) => {
-    const user = await prisma.user.findUnique({
-        where: { id },
-    });
-
-    if (!user) {
-        throw new Error("Access data danied, Please login or register first");
-    }
-
-    const category = await prisma.category.findUnique({
-        where: { name: dataProduct.category }
-    });
-
-    if (!category) {
-        throw new Error("Category must be added")
-    }
-
-    const parseSlug = slugify(dataProduct.name);
-
-    const generateProductData = await prisma.product.create({
-        data: {
-            name: dataProduct.name,
-            slug: parseSlug,
-            description: dataProduct.description,
-            price: dataProduct.price,
-            categoryId: category.id,
-            stock: dataProduct.stock,
-            imageUrl: {
-                create: {
-                    imageUrl: dataProduct.imageUrl,
-                },
+    return prisma.$transaction(async (db) => {
+        const user = await db.user.findUnique({
+            where: { id },
+        });
+    
+        if (!user) {
+            throw new Error("Access data danied, Please login or register first");
+        }
+    
+        const category = await db.category.findUnique({
+            where: { name: dataProduct.category }
+        });
+    
+        if (!category) {
+            throw new Error("Category must be added")
+        }
+    
+        const parseSlug = slugify(dataProduct.name);
+    
+        const generateProductData = await db.product.create({
+            data: {
+                name: dataProduct.name,
+                slug: parseSlug,
+                description: dataProduct.description,
+                price: dataProduct.price,
+                categoryId: category.id,
+                stock: dataProduct.stock,
+                publish: false,
+                userId: user.id,
             },
-            publish: false,
-            userId: user.id,
-        },
-    });
+        });
 
-    return generateProductData;
+        const uploadProductImages = await Promise.all(
+            dataProduct.imageUrl.map(async (img) => {
+                return db.image.create({
+                    data: {
+                        imageUrl: img.imageUrl,
+                        productId: generateProductData.id
+                    },
+                });
+            })
+        );
+    
+        return {
+            ...generateProductData,
+            imageUrl: uploadProductImages
+        };
+    })
 };
 
 export const deleteProduct = async (productId: string) => {
