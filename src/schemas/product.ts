@@ -1,5 +1,11 @@
 import { z } from '@hono/zod-openapi'
 
+const images = z.object({
+    imageUrl: z.string().openapi({
+        example: "https://...com"
+    })
+})
+
 const ProductSchema = z.object({
     id: z.string().min(4).openapi({
         example: ""
@@ -10,9 +16,7 @@ const ProductSchema = z.object({
     slug: z.string().openapi({
         example: ""
     }).optional(),
-    imageUrl: z.string().openapi({
-        example: "https://...com"
-    }),
+    imageUrl: z.array(images),
     description: z.string().openapi({
         example: "Very good quality"
     }),
@@ -37,9 +41,7 @@ export const createProductSchema = z.object({
     name: z.string().openapi({
         example: "Brake pedal"
     }),
-    imageUrl: z.string().openapi({
-        example: "https://...com"
-    }),
+    imageUrl: z.array(images),
     description: z.string().openapi({
         example: "Very good quality"
     }),
