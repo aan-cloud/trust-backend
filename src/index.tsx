@@ -50,8 +50,8 @@ app.doc("/openapi.json", {
     openapi: "3.1.0",
     info: {
         version: "1.0.0",
-        title: "CheckCafe API",
-        description: "API for CheckCafe project.",
+        title: "Trust API",
+        description: "API for Trust project.",
     },
 });
 
