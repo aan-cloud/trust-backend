@@ -26,7 +26,7 @@ export default function WelcomePage() {
                 <ul className="list-disc list-inside text-lg text-gray-700 mb-6">
                     <li>
                         <a
-                            href="/api-spec"
+                            href="/openapi.json"
                             target="_blank"
                             className="text-blue-500 hover:underline"
                         >
