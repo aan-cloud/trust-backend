@@ -11,11 +11,12 @@ import * as crypto from "../libs/crypto";
 import * as jwt from "../libs/jwt";
 import { google } from "googleapis";
 import { oauth2Client } from "../libs/oauth";
+import { uploadImage } from "../libs/uploadcare";
 
 type RegisterSchema = z.infer<typeof registerSchema>;
 type LoginSchema = z.infer<typeof loginSchema>;
 type ChangePasswordSchema = z.infer<typeof changePasswordSchema>;
-type SellerRegisterSchema = z.infer<typeof sellerRegisterSchema>;
+type SellerRegisterSchema = z.infer<typeof sellerRegisterSchema>
 
 const processToken = async (
     refreshToken: string,
@@ -381,10 +382,12 @@ export const registerSeller = async (userData: SellerRegisterSchema) => {
             },
         });
 
+        const imageUuid = await uploadImage(userData.avatarUrl);
+
         const updatedUser = await db.user.update({
             where: { id: userData.userId },
             data: {
-                avatarUrl: userData.avatarUrl,
+                avatarUrl: `https://ucarecdn.com/${imageUuid}`,
                 description: userData.description,
             },
             select: {
