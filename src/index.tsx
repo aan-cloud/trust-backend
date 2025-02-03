@@ -7,6 +7,7 @@ import productRoute from "./routes/product";
 import cartRoute from "./routes/cart";
 import checkoutRoute from "./routes/checkout";
 import { OpenAPIHono } from "@hono/zod-openapi";
+import sellerRoute from "./routes/seller";
 
 const app = new OpenAPIHono();
 
@@ -49,7 +50,7 @@ app.get(
 app.doc("/openapi.json", {
     openapi: "3.1.0",
     info: {
-        version: "1.0.0",
+        version: "1.1.0",
         title: "Trust API",
         description: "API for Trust project.",
     },
@@ -59,6 +60,7 @@ app.doc("/openapi.json", {
 app.route("/products", productRoute);
 // app.route("/categories", categoriesRoute);
 // app.route("/users", userRoute);
+app.route("/seller", sellerRoute)
 app.route("/checkout", checkoutRoute)
 app.route("/auth", authRoute);
 app.route("/cart", cartRoute)
