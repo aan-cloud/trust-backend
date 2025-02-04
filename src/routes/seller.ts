@@ -14,6 +14,34 @@ const TAGS = ["Seller"];
 
 sellerRoute.openapi(
     {
+        path: "/",
+        method: "get",
+        tags: TAGS,
+        summary: "Get all selleer list",
+        responses: {
+            201: {
+                description: "Get selllers success",
+            },
+            400: {
+                description: "Get sellers failed",
+            },
+        },
+    },
+    async (c) => {
+
+        try {
+            const sellers = await sellerServices.getAllSeller();
+
+            return c.json(sellers, 200);
+        } catch (error: Error | any) {
+            return c.json(error, 400)
+        }
+    }
+);
+
+
+sellerRoute.openapi(
+    {
         method: "get",
         path: "/{sellerId}/dashboard",
         summary: "Seller Dashboard",
