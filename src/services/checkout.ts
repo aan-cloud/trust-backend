@@ -27,9 +27,6 @@ export const createCheckoutSession = async (userId: string) => {
     const line_items = productToCheckout?.items.map((item) => ({
         price_data: {
           currency: 'myr',
-          metadata: {
-            userId
-          },
           product_data: {
             name: item.product.name,
             images: item.product.imageUrl.map(url => url.imageUrl),
@@ -42,6 +39,9 @@ export const createCheckoutSession = async (userId: string) => {
     const session = await stripe.checkout.sessions.create({
         line_items,
         mode: 'payment',
+        metadata: {
+            userId
+        },
         success_url: 'http://trust.muhammad-farhan.com/success',
         cancel_url: 'http://trust.muhammad-farhan.com/cancel',
     });
