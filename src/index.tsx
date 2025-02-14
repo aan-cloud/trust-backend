@@ -6,6 +6,7 @@ import authRoute from "./routes/auth.js";
 import productRoute from "./routes/product";
 import cartRoute from "./routes/cart";
 import checkoutRoute from "./routes/checkout";
+import webHookRoutes from "./routes/webhook";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import sellerRoute from "./routes/seller";
 
@@ -60,6 +61,7 @@ app.doc("/openapi.json", {
 app.route("/products", productRoute);
 // app.route("/categories", categoriesRoute);
 // app.route("/users", userRoute);
+app.route("/webhook", webHookRoutes)
 app.route("/seller", sellerRoute)
 app.route("/checkout", checkoutRoute)
 app.route("/auth", authRoute);

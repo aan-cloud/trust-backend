@@ -6,7 +6,7 @@ const TAGS = ["Webhooks"];
 
 webHookRoutes.openapi(
     {
-        path: "/create",
+        path: "/",
         method: "post",
         tags: TAGS,
         summary: "Create Stripe Webhook",
@@ -56,3 +56,5 @@ webHookRoutes.openapi(
 
     }
 );
+
+export default webHookRoutes;
