@@ -206,9 +206,11 @@ model Transaction {
   amount               Int
   currency             String
   status               String   @default("PENDING") // PENDING, SUCCESS, FAILED
-  stripePaymentIntentId String  @unique
+  stripePaymentId String  @unique
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
+
+  @@map("transactions")
 }
 
 // Soon => Order, Message.

@@ -46,6 +46,19 @@ export const createCheckoutSession = async (userId: string) => {
         cancel_url: 'http://trust.muhammad-farhan.com/cancel',
     });
 
+    if (!session || session.status === "expired") {
+        throw new Error("Checkout session failed or expired")
+    }
+
+    await prisma.transaction.create({
+        data: {
+            userId,
+            amount: session.amount_total!,
+            currency: session.currency!,
+            stripePaymentId: session.id
+        }
+    });
+
     return {
         sessionUrl: session.url
     }

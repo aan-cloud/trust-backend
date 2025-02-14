@@ -1,46 +1,31 @@
 import Stripe from "stripe";
+import stripe from "../libs/stripe";
 import prisma from "../libs/db";
-import { verifyStripeSignature } from "../libs/stripe";
+
+const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET as string;
 
 export const webhookFunction = async (body: string, signature: string) => {
-    const event = verifyStripeSignature(body, signature);
+    const event = stripe.webhooks.constructEvent(body, signature, endpointSecret)
     if (!event) throw Error("Invalid signature");
 
     switch(event.type) {
-        case "payment_intent.created": {
-            const paymentIntent = event.data.object as Stripe.PaymentIntent
-            const userId = paymentIntent.metadata.userId;
 
-            if (!userId) throw new Error("Missing userId in metadata");
-
-            await prisma.transaction.create({
-                data: {
-                    userId,
-                    amount: paymentIntent.amount,
-                    currency: paymentIntent.currency,
-                    stripePaymentIntentId: paymentIntent.id
-                }
-            });
-
-            break
-        }
-
-        case "payment_intent.succeeded": {
-            const paymentIntent = event.data.object as Stripe.PaymentIntent
+        case "checkout.session.completed": {
+            const paymentSession = event.data.object as Stripe.Checkout.Session
 
             await prisma.transaction.updateMany({
-                where: { stripePaymentIntentId: paymentIntent.id },
+                where: { stripePaymentId: paymentSession.id },
                 data: { status: "SUCCES"}
             })
 
             break
         }
 
-        case "payment_intent.payment_failed": {
-            const paymentIntent = event.data.object as Stripe.PaymentIntent
+        case "checkout.session.expired": {
+            const paymentSession = event.data.object as Stripe.Checkout.Session
 
             await prisma.transaction.updateMany({
-                where: { stripePaymentIntentId: paymentIntent.id },
+                where: { stripePaymentId: paymentSession.id },
                 data: { status: "FAILED"}
             })
 
@@ -48,7 +33,7 @@ export const webhookFunction = async (body: string, signature: string) => {
         }
 
         default:
-            throw Error("Unandled event Type")
+            throw Error("Unhandled event Type")
     }
 
 }
