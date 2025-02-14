@@ -29,6 +29,7 @@ model User {
   tokens UserToken[] @relation("UserTokens")
   products Product[]
   productRates Rating[]
+  transaction Transaction[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -198,6 +199,16 @@ model Rating {
   @@map("ratings")
 }
 
-
+model Transaction {
+  id                   String   @id @default(uuid())
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id])
+  amount               Int
+  currency             String
+  status               String   @default("PENDING") // PENDING, SUCCESS, FAILED
+  stripePaymentIntentId String  @unique
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
 
 // Soon => Order, Message.
