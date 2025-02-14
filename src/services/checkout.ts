@@ -46,19 +46,29 @@ export const createCheckoutSession = async (userId: string) => {
         cancel_url: 'https://trust.muhammad-farhan.com/cancel',
     });
 
-    if (!session) {
-        throw new Error("Checkout session failed")
+    if (session.status === "open") {
+        await prisma.transaction.create({
+            data: {
+                userId,
+                amount: session.amount_total! / 100,
+                currency: session.currency!,
+                stripePaymentId: session.id,
+                status: "PENDING"
+            }
+        });
+    } else if (session.status === "complete") {
+        await prisma.transaction.updateMany({
+            where: { stripePaymentId: session.id },
+            data: { status: "SUCCES" }
+        });
+    } else {
+        await prisma.transaction.updateMany({
+            where: { stripePaymentId: session.id },
+            data: { status: "FAILED" }
+        });
     }
 
-    await prisma.transaction.create({
-        data: {
-            userId,
-            amount: session.amount_total! / 100,
-            currency: session.currency!,
-            stripePaymentId: session.id,
-            status: "PENDING"
-        }
-    });
+    
 
     return {
         sessionUrl: session.url
