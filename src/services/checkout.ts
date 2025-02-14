@@ -53,7 +53,7 @@ export const createCheckoutSession = async (userId: string) => {
     await prisma.transaction.create({
         data: {
             userId,
-            amount: session.amount_total!,
+            amount: session.amount_total! / 100,
             currency: session.currency!,
             stripePaymentId: session.id
         }
