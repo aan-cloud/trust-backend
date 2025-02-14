@@ -14,9 +14,9 @@ webHookRoutes.openapi(
         request: {
             body: {
                 content: {
-                    "text/plain": {
+                    "application/json": {
                         schema: {
-                            type: "string"
+                            type: "object"
                         }
                     }
                 }
@@ -44,7 +44,7 @@ webHookRoutes.openapi(
     },
     async (c) => {
         const body = await c.req.text();
-        const header= c.req.header("stripe-signature");
+        const header = c.req.header("stripe-signature");
 
         try {
             await webhookFunction(body, header!);

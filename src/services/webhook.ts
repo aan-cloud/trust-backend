@@ -5,35 +5,44 @@ import prisma from "../libs/db";
 const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET as string;
 
 export const webhookFunction = async (body: string, signature: string) => {
-    const event = stripe.webhooks.constructEvent(body, signature, endpointSecret)
-    if (!event) throw Error("Invalid signature");
+    let event;
+    try {
+        event = stripe.webhooks.constructEvent(body, signature, endpointSecret);
+    } catch (err: any) {
+        throw new Error(`Webhook verification failed: ${err.message}`);
+    }
 
-    switch(event.type) {
+    switch (event.type) {
+        case "checkout.session.completed": {
+            const paymentSession = event.data.object as Stripe.Checkout.Session;
 
-        case "checkout.session.async_payment_succeeded": {
-            const paymentSession = event.data.object as Stripe.Checkout.Session
-
-            await prisma.transaction.updateMany({
-                where: { stripePaymentId: paymentSession.id },
-                data: { status: "SUCCES"}
-            })
-
-            break
+            try {
+                await prisma.transaction.updateMany({
+                    where: { stripePaymentId: paymentSession.id },
+                    data: { status: "SUCCESS" }
+                });
+            } catch (err) {
+                console.error("Database update failed:", err);
+            }
+            break;
         }
 
-        case "checkout.session.async_payment_failed": {
-            const paymentSession = event.data.object as Stripe.Checkout.Session
+        case "checkout.session.expired": {
+            const paymentSession = event.data.object as Stripe.Checkout.Session;
 
-            await prisma.transaction.updateMany({
-                where: { stripePaymentId: paymentSession.id },
-                data: { status: "FAILED"}
-            })
-
-            break
+            try {
+                await prisma.transaction.updateMany({
+                    where: { stripePaymentId: paymentSession.id },
+                    data: { status: "FAILED" }
+                });
+            } catch (err) {
+                console.error("Database update failed:", err);
+            }
+            break;
         }
 
         default:
-            throw Error("Unhandled event Type")
+            console.warn(`Unhandled event type: ${event.type}`);
+            break;
     }
-
-}
+};
