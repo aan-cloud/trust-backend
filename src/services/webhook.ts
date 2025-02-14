@@ -10,7 +10,7 @@ export const webhookFunction = async (body: string, signature: string) => {
 
     switch(event.type) {
 
-        case "checkout.session.completed": {
+        case "checkout.session.async_payment_succeeded": {
             const paymentSession = event.data.object as Stripe.Checkout.Session
 
             await prisma.transaction.updateMany({
@@ -21,7 +21,7 @@ export const webhookFunction = async (body: string, signature: string) => {
             break
         }
 
-        case "checkout.session.expired": {
+        case "checkout.session.async_payment_failed": {
             const paymentSession = event.data.object as Stripe.Checkout.Session
 
             await prisma.transaction.updateMany({
