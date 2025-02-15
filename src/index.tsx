@@ -12,7 +12,7 @@ import sellerRoute from "./routes/seller";
 
 const app = new OpenAPIHono();
 
-app.use("*", cors());
+app.use("/*", cors());
 
 app.get("/", async (c) => {
     return await c.html(

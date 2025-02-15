@@ -8,7 +8,9 @@ export const webhookFunction = async (body: string, signature: string) => {
     let event;
     try {
         event = stripe.webhooks.constructEvent(body, signature, endpointSecret);
+        console.log('Received webhook event:', event.type);
     } catch (err: any) {
+        console.error("Webhook verification failed", err.message)
         throw new Error(`Webhook verification failed: ${err.message}`);
     }
 
@@ -21,8 +23,8 @@ export const webhookFunction = async (body: string, signature: string) => {
                     where: { stripePaymentId: paymentSession.id },
                     data: { status: "SUCCESS" }
                 });
-            } catch (err) {
-                console.error("Database update failed:", err);
+            } catch (err: Error | any ) {
+                return { received: false, error: err.message }
             }
             break;
         }
@@ -35,14 +37,12 @@ export const webhookFunction = async (body: string, signature: string) => {
                     where: { stripePaymentId: paymentSession.id },
                     data: { status: "FAILED" }
                 });
-            } catch (err) {
-                console.error("Database update failed:", err);
+            } catch (err: Error | any ) {
+                return { received: false, error: err.message }
             }
             break;
         }
-
-        default:
-            console.warn(`Unhandled event type: ${event.type}`);
-            break;
     }
+
+    return { received: true }
 };

@@ -35,23 +35,37 @@ webHookRoutes.openapi(
         ],
         responses: {
             201: {
-                description: "Add product success",
+                description: "Transaction webhook succesfully",
             },
             400: {
-                description: "Add product failed",
+                description: "Transaction webhook failed",
             },
         },
     },
     async (c) => {
         const body = await c.req.text();
+        console.log("body: " + body)
         const header = c.req.header("stripe-signature");
+        console.log(header)
+
+        if (!header) {
+            console.error("Missing stripe-signature header");
+            return c.json(
+                { 
+                    error: "Missing stripe-signature header",
+                    type: "missing_signature" 
+                }, 
+                400
+            );
+        }
 
         try {
-            await webhookFunction(body, header!);
-
-            return c.json({ message: "Succes exe webhook" }, 201);
+            const webhookTransaction = await webhookFunction(body, header!);
+            console.log(webhookTransaction)
+            return c.json( webhookTransaction, 200);
         } catch (error: Error | any ) {
-            return c.json(error, 401);
+            console.log("webhook gagal")
+            return c.json({ error: error.message }, 400);
         }
 
     }
