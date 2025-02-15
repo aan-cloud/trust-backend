@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import stripe from "../libs/stripe";
 import prisma from "../libs/db";
+import { deleteCartItem } from "./cart";
 
 const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET as string;
 
@@ -23,6 +24,27 @@ export const webhookFunction = async (body: string, signature: string) => {
                     where: { stripePaymentId: paymentSession.id },
                     data: { status: "SUCCESS" }
                 });
+
+                const userCart = await prisma.cart.findFirst({
+                    where: { userId: paymentSession.metadata?.userId },
+                    select: {
+                        items: {
+                            select: {
+                                id: true,
+                                product: true
+                            }
+                        },
+                    },
+                });
+
+                if (!userCart) {
+                    throw new Error("UserCart not found")
+                };
+                // Delete all items in user cart
+                userCart.items.forEach( async (item) => {
+                    await deleteCartItem(item.id, item.product.slug);
+                });
+
             } catch (err: Error | any ) {
                 return { received: false, error: err.message }
             }

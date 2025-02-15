@@ -45,7 +45,7 @@ export const createCheckoutSession = async (userId: string) => {
         success_url: 'https://trust.muhammad-farhan.com/success',
         cancel_url: 'https://trust.muhammad-farhan.com/cancel',
     });
-
+    // create user transaction field
     await prisma.transaction.create({
         data: {
             userId,
