@@ -8,7 +8,7 @@ const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET as string;
 export const webhookFunction = async (body: string, signature: string) => {
     let event;
     try {
-        event = stripe.webhooks.constructEvent(body, signature, endpointSecret);
+        event = await stripe.webhooks.constructEventAsync(body, signature, endpointSecret);
         console.log('Received webhook event:', event.type);
     } catch (err: any) {
         console.error("Webhook verification failed", err.message);
