@@ -2,6 +2,7 @@ import Stripe from "stripe";
 import stripe from "../libs/stripe";
 import prisma from "../libs/db";
 import { deleteCartItem } from "./cart";
+import { createTransactionItem } from "./transaction";
 
 const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET as string;
 
@@ -19,6 +20,7 @@ export const webhookFunction = async (body: string, signature: string) => {
         switch (event.type) {
             case "checkout.session.completed": {
                 const paymentSession = event.data.object as Stripe.Checkout.Session;
+                const userId = paymentSession.metadata?.userId;
                 console.log('Processing completed session:', paymentSession.id);
 
                 // Update transaction status
@@ -33,7 +35,7 @@ export const webhookFunction = async (body: string, signature: string) => {
 
                 // Get user cart
                 const userCart = await prisma.cart.findFirst({
-                    where: { userId: paymentSession.metadata?.userId },
+                    where: { userId },
                     select: {
                         items: {
                             select: {
@@ -48,6 +50,24 @@ export const webhookFunction = async (body: string, signature: string) => {
                     console.warn('No cart found for user:', paymentSession.metadata?.userId);
                     return { received: true, warning: "No cart found to clear" };
                 }
+
+                // get transaction
+                const userTransaction = await prisma.transaction.findFirst({
+                    where: { stripePaymentId: paymentSession.id },
+                    select: { id: true}
+                });
+
+                if (!userTransaction) {
+                    console.warn("no transaction found to add");
+                    return { received: true, warning: "no transaction found to add" };
+                }
+
+                await Promise.all(
+                    userCart.items.map(item => 
+                        createTransactionItem(userId as string, userTransaction?.id, item.product.id)
+                    )
+                );
+                console.log('Success add prouct to transaction history');
 
                 // Delete cart items properly
                 await Promise.all(
