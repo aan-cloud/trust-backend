@@ -1,7 +1,7 @@
 import { Context } from "hono";
 import { createMiddleware } from "hono/factory";
 
-// Middleware untuk membaca raw body
+// Middleware for read raw body
 const rawBodyMiddleware = createMiddleware( async (c: Context, next) => {
     const reader = c.req.raw.body?.getReader()
     const chunks: Uint8Array[] = []
