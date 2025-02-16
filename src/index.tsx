@@ -9,6 +9,7 @@ import checkoutRoute from "./routes/checkout";
 import webHookRoutes from "./routes/webhook";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import sellerRoute from "./routes/seller";
+import transactionRoute from "./routes/transaction";
 
 const app = new OpenAPIHono();
 
@@ -60,12 +61,12 @@ app.doc("/openapi.json", {
 // API route
 app.route("/products", productRoute);
 // app.route("/categories", categoriesRoute);
-// app.route("/users", userRoute);
-app.route("/webhook", webHookRoutes)
-app.route("/seller", sellerRoute)
-app.route("/checkout", checkoutRoute)
+app.route("/transaction", transactionRoute);
+app.route("/webhook", webHookRoutes);
+app.route("/seller", sellerRoute);
+app.route("/checkout", checkoutRoute);
 app.route("/auth", authRoute);
-app.route("/cart", cartRoute)
+app.route("/cart", cartRoute);
 
 const port = process.env.PORT || 3000;
 console.log(`Server is running on port ${port}`);
