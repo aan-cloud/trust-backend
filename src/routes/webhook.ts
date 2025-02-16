@@ -1,5 +1,7 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { webhookFunction } from "../services/webhook";
+import rawBodyMiddleware from "../middlewares/raw-body";
+import { Context } from "hono";
 
 const webHookRoutes = new OpenAPIHono();
 const TAGS = ["Webhooks"];
@@ -11,6 +13,7 @@ webHookRoutes.openapi(
         tags: TAGS,
         summary: "Create Stripe Webhook",
         description: "This endpoint not for consuming directly",
+        middleware: [rawBodyMiddleware],
         request: {
             body: {
                 content: {
@@ -43,7 +46,7 @@ webHookRoutes.openapi(
         },
     },
     async (c) => {
-        const body = await c.req.text();
+        const body =  (c as Context).get("rawBody");
         console.log("body: " + body)
         const header = c.req.header("stripe-signature");
         console.log(header)

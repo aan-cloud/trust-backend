@@ -2,6 +2,7 @@ import { Context } from "hono";
 import { createMiddleware } from "hono/factory";
 import { validateToken } from "../libs/jwt";
 import prisma from "../libs/db";
+import { ContentfulStatusCode } from "hono/utils/http-status";
 
 const authMiddleware = createMiddleware(async (c: Context, next) => {
     const token = extractToken(c.req.header("Authorization"));
@@ -49,7 +50,7 @@ export const respondWithError = (
     message: string,
     status: number
 ) => {
-    return c.json({ message }, { status });
+    return c.json({ message }, status as ContentfulStatusCode);
 };
 
 export default authMiddleware;
