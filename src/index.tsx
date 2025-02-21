@@ -12,8 +12,14 @@ import sellerRoute from "./routes/seller";
 import transactionRoute from "./routes/transaction";
 
 const app = new OpenAPIHono();
-
+// Cors
 app.use("/*", cors());
+// Logging
+app.use('*', async (c, next) => {
+    console.log(`Request: ${c.req.method} ${c.req.url}`);
+    await next();
+    console.log(`Response Status: ${c.res.status}`);
+});
 
 app.get("/", async (c) => {
     return await c.html(
@@ -38,7 +44,7 @@ app.get("/", async (c) => {
         </html>
     );
 });
-
+// Scalar 
 app.get(
     "/ui",
     apiReference({
